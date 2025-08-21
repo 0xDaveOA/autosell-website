@@ -1053,6 +1053,11 @@ li {
     box-shadow: var(--shadow-lg);
 }
 
+.contact-icon:hover {
+    transform: scale(1.1);
+    transition: var(--transition-normal);
+}
+
 .contact-icon {
     width: 80px;
     height: 80px;
@@ -1063,17 +1068,21 @@ li {
     margin: 0 auto var(--spacing-lg);
     font-size: 2rem;
     color: var(--white);
+    box-shadow: var(--shadow-md);
 }
 
-.contact-card .btn-whatsapp .contact-icon {
+/* WhatsApp icon styling */
+.contact-card:nth-child(1) .contact-icon {
     background: #25D366;
 }
 
-.contact-card .btn-facebook .contact-icon {
+/* Facebook icon styling */
+.contact-card:nth-child(2) .contact-icon {
     background: #1877F2;
 }
 
-.contact-card .btn-instagram .contact-icon {
+/* Instagram icon styling */
+.contact-card:nth-child(3) .contact-icon {
     background: linear-gradient(45deg, #F58529, #DD2A7B, #8134AF, #515BD4);
 }
 
