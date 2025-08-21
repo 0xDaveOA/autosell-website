@@ -2679,16 +2679,16 @@ li {
 .pricing-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--spacing-xl);
-    margin-bottom: var(--spacing-4xl);
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-3xl);
 }
 
 /* Pricing Cards */
 .pricing-card {
     background: var(--white);
-    border-radius: var(--radius-2xl);
-    padding: var(--spacing-2xl);
-    box-shadow: var(--shadow-lg);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-md);
     border: 2px solid transparent;
     transition: var(--transition-normal);
     position: relative;
@@ -2726,15 +2726,15 @@ li {
 /* Pricing Header */
 .pricing-header {
     text-align: center;
-    margin-bottom: var(--spacing-xl);
-    padding-bottom: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+    padding-bottom: var(--spacing-md);
     border-bottom: 1px solid var(--gray-light);
 }
 
 .pricing-header h3 {
-    font-size: var(--font-size-xl);
+    font-size: var(--font-size-lg);
     color: var(--text-color);
-    margin-bottom: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
 }
 
 .price {
@@ -2752,7 +2752,7 @@ li {
 }
 
 .price .amount {
-    font-size: var(--font-size-4xl);
+    font-size: var(--font-size-2xl);
     font-weight: 800;
     color: var(--primary-accent);
     line-height: 1;
@@ -2772,7 +2772,7 @@ li {
 
 /* Pricing Features */
 .pricing-features {
-    margin-bottom: var(--spacing-xl);
+    margin-bottom: var(--spacing-lg);
 }
 
 .pricing-features ul {
@@ -2785,10 +2785,10 @@ li {
     display: flex;
     align-items: flex-start;
     gap: var(--spacing-sm);
-    margin-bottom: var(--spacing-md);
-    font-size: var(--font-size-base);
+    margin-bottom: var(--spacing-sm);
+    font-size: var(--font-size-sm);
     color: var(--gray-dark);
-    line-height: 1.5;
+    line-height: 1.4;
 }
 
 .pricing-features i {
@@ -2805,7 +2805,7 @@ li {
 
 .pricing-actions .btn {
     width: 100%;
-    margin-bottom: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
 }
 
 .best-for {
@@ -2837,15 +2837,15 @@ li {
 .addon-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--spacing-xl);
-    margin-bottom: var(--spacing-4xl);
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-3xl);
 }
 
 .addon-card {
     background: var(--white);
-    border-radius: var(--radius-xl);
-    padding: var(--spacing-xl);
-    box-shadow: var(--shadow-md);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-sm);
     border: 1px solid var(--gray-light);
     transition: var(--transition-normal);
 }
@@ -2856,23 +2856,23 @@ li {
 }
 
 .addon-icon {
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
     background: var(--primary-accent);
     color: var(--white);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto var(--spacing-lg);
-    font-size: 1.5rem;
+    margin: 0 auto var(--spacing-md);
+    font-size: 1.25rem;
 }
 
 .addon-card h4 {
     text-align: center;
-    font-size: var(--font-size-lg);
+    font-size: var(--font-size-base);
     color: var(--text-color);
-    margin-bottom: var(--spacing-lg);
+    margin-bottom: var(--spacing-md);
 }
 
 .addon-pricing {
@@ -2885,7 +2885,7 @@ li {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: var(--spacing-md);
+    padding: var(--spacing-sm);
     background: var(--neutral-background);
     border-radius: var(--radius-md);
     border: 1px solid var(--gray-light);
@@ -2900,15 +2900,15 @@ li {
 .addon-price {
     font-weight: 800;
     color: var(--primary-accent);
-    font-size: var(--font-size-lg);
-    margin: 0 var(--spacing-md);
+    font-size: var(--font-size-base);
+    margin: 0 var(--spacing-sm);
 }
 
 .addon-desc {
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-xs);
     color: var(--gray-dark);
     text-align: right;
-    max-width: 120px;
+    max-width: 100px;
 }
 
 /* Subscription Plans */
