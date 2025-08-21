@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoSell Ltd - Your Trusted Platform for Car Buyers and Sellers in Ghana</title>
+    <meta name="description" content="Modern, mobile-first platform connecting car buyers with trusted sellers in Ghana. Browse cars, advertise your vehicle, and find your perfect match.">
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚗</text></svg>">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav">
+            <div class="nav-container">
+                <div class="logo">
+                    <div class="logo-image">
+                        <img src="photo_2025-02-22_10-14-40.jpg" alt="AutoSell Ltd Logo">
+                    </div>
+                    <span class="logo-text">AutoSell Ltd</span>
+                </div>
+                <div class="nav-menu" id="navMenu">
+                    <a href="#home" class="nav-link active">Home</a>
+                    <a href="#browse" class="nav-link">Browse Cars</a>
+                    <a href="sell-form.html" class="nav-link">Sell Your Car</a>
+                    <a href="#partner" class="nav-link">Partner With Us</a>
+                    <a href="#about" class="nav-link">About</a>
+                    <a href="#contact" class="nav-link">Contact</a>
+                </div>
+                <div class="nav-toggle" id="navToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-background">
+            <img src="photo_2025-02-22_10-14-40.jpg" alt="AutoSell Ltd Background" class="hero-bg-image">
+            <div class="hero-overlay"></div>
+        </div>
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1 class="hero-title">Your Trusted Platform for Car Buyers and Sellers in Ghana</h1>
+                <p class="hero-subtitle">Connect with trusted sellers, browse quality cars, and reach more buyers through our mobile-first marketplace.</p>
+                <div class="hero-buttons">
+                    <a href="#browse" class="btn btn-primary">
+                        <i class="fas fa-search"></i>
+                        Browse Cars
+                    </a>
+                    <a href="sell-form.html" class="btn btn-secondary">
+                        <i class="fas fa-plus"></i>
+                        Sell My Car
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Hero Stats -->
+            <div class="hero-stats">
+                <div class="stat">
+                    <div class="stat-number" data-target="50">0+</div>
+                    <div class="stat-label">Cars Listed</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number" data-target="100">0+</div>
+                    <div class="stat-label">Happy Buyers</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number" data-target="25">0+</div>
+                    <div class="stat-label">Trusted Partners</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>Why Choose AutoSell?</h2>
+                <p>We make buying and selling cars simple, secure, and successful</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>Mobile-First Platform</h3>
+                    <p>Browse and list cars easily on any device with our responsive design.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Trusted Sellers</h3>
+                    <p>Connect with verified garages, dealerships, and private sellers across Ghana.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bullhorn"></i>
+                    </div>
+                    <h3>Social Media Promotion</h3>
+                    <p>Your listings get promoted on our Facebook and Instagram for maximum visibility.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <h3>Easy Communication</h3>
+                    <p>Contact sellers directly via WhatsApp, Facebook, or Instagram.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Cars Section -->
+    <section id="browse" class="featured-cars">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-title">
+                    <h2>Featured Cars</h2>
+                    <p>Discover amazing vehicles from trusted sellers across Ghana</p>
+                </div>
+                <a href="sell-form.html" class="btn btn-primary">
+                    <i class="fas fa-plus"></i>
+                    List Your Car
+                </a>
+            </div>
+            <div class="cars-grid" id="carsGrid">
+                <!-- Cars will be loaded dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Sell Section -->
+    <section class="sell-section">
+        <div class="container">
+            <div class="sell-content">
+                <div class="sell-text">
+                    <h2>Ready to Sell Your Car?</h2>
+                    <p>Join thousands of successful sellers who trust AutoSell Ltd to reach qualified buyers across Ghana.</p>
+                    <ul class="sell-benefits">
+                        <li><i class="fas fa-check-circle"></i> Professional advertising service</li>
+                        <li><i class="fas fa-check-circle"></i> Reach thousands of potential buyers</li>
+                        <li><i class="fas fa-check-circle"></i> Social media promotion included</li>
+                        <li><i class="fas fa-check-circle"></i> Quick and easy listing process</li>
+                    </ul>
+                    <a href="sell-form.html" class="btn btn-primary">
+                        <i class="fas fa-plus"></i>
+                        Start Selling Now
+                    </a>
+                    <small class="advertising-fee-note">Small Advertising Fee</small>
+                </div>
+                <div class="advertising-card">
+                    <div class="advertising-image-container">
+                        <img src="Car Ads\3.webp" alt="Professional Car Advertising Service" class="advertising-image">
+                    </div>
+            </div>
+        </div>
+    </section>
+    
+
+
+    <!-- Partner Section -->
+    <section id="partner" class="partner-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Partner With Us</h2>
+                <p>Join our network of trusted automotive professionals and grow your business</p>
+            </div>
+            <div class="partner-grid">
+                <div class="partner-card">
+                    <div class="partner-icon">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <h3>Garages & Dealerships</h3>
+                    <p>List your inventory and reach a wider audience of potential buyers across Ghana.</p>
+                    <a href="#contact" class="btn btn-outline">Partner Now</a>
+                </div>
+                <div class="partner-card">
+                    <div class="partner-icon">
+                        <i class="fas fa-car"></i>
+                    </div>
+                    <h3>Private Sellers</h3>
+                    <p>Get your car in front of thousands of potential buyers with our premium advertising service.</p>
+                    <a href="#contact" class="btn btn-outline">Partner Now</a>
+                </div>
+                <div class="partner-card">
+                    <div class="partner-icon">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                    <h3>Auto Services</h3>
+                    <p>From detailing to insurance, promote your automotive services to our community.</p>
+                    <a href="#contact" class="btn btn-outline">Join Us</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about-section">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2>About AutoSell Ltd</h2>
+                    <p>We're passionate about connecting car buyers with trusted sellers across Ghana. Our platform makes it easy to find your dream car or sell your vehicle quickly and securely.</p>
+                    <div class="about-stats">
+                        <div class="about-stat">
+                            <div class="about-stat-number">3+</div>
+                            <div class="about-stat-label">Years Experience</div>
+                        </div>
+                        <div class="about-stat">
+                            <div class="about-stat-number">15+</div>
+                            <div class="about-stat-label">Cities Covered</div>
+                        </div>
+                        <div class="about-stat">
+                            <div class="about-stat-number">98%</div>
+                            <div class="about-stat-label">Customer Satisfaction</div>
+                        </div>
+                    </div>
+                    <p>Whether you're buying your first car or selling a family vehicle, we're here to make the process smooth and successful.</p>
+                </div>
+                <div class="about-image">
+                    <img src="photo_2025-02-22_10-14-40.jpg" alt="AutoSell Ltd Team" class="about-logo">
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Get In Touch</h2>
+                <p>Ready to buy, sell, or partner with us? Let's talk!</p>
+            </div>
+            <div class="contact-grid">
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fab fa-whatsapp"></i>
+                    </div>
+                    <h3>WhatsApp</h3>
+                    <p>Chat with us directly</p>
+                    <a href="https://wa.me/233505677556" class="btn btn-whatsapp" target="_blank">
+                        <i class="fab fa-whatsapp"></i>
+                        Chat Now
+                    </a>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fab fa-facebook"></i>
+                    </div>
+                    <h3>Facebook</h3>
+                    <p>Follow us for updates</p>
+                    <a href="https://www.facebook.com/profile.php?id=61573682903085" class="btn btn-facebook" target="_blank">
+                        <i class="fab fa-facebook"></i>
+                        Follow Us
+                    </a>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fab fa-instagram"></i>
+                    </div>
+                    <h3>Instagram</h3>
+                    <p>See our latest listings</p>
+                    <a href="https://www.instagram.com/autosell_ltd/" class="btn btn-instagram" target="_blank">
+                        <i class="fab fa-instagram"></i>
+                        Follow Us
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Choose Your Advertising Package</h2>
+                <p>Professional car advertising with guaranteed exposure. Select the package that fits your needs and budget.</p>
+            </div>
+            
+            <div class="pricing-grid">
+                <!-- Basic Listing -->
+                <div class="pricing-card basic">
+                    <div class="pricing-header">
+                        <h3>Basic Listing</h3>
+                        <div class="price">
+                            <span class="currency">₵</span>
+                            <span class="amount">75</span>
+                            <span class="period">per car</span>
+                        </div>
+                        <p class="duration">30 days listing</p>
+                    </div>
+                    <div class="pricing-features">
+                        <ul>
+                            <li><i class="fas fa-check"></i> Website listing on AutoSell Ltd</li>
+                            <li><i class="fas fa-check"></i> Basic social media post (Facebook/Instagram)</li>
+                            <li><i class="fas fa-check"></i> Standard listing page with photos</li>
+                            <li><i class="fas fa-check"></i> Contact information display</li>
+                            <li><i class="fas fa-check"></i> Basic search visibility</li>
+                            <li><i class="fas fa-check"></i> Email support</li>
+                        </ul>
+                    </div>
+                    <div class="pricing-actions">
+                        <a href="sell-form.html?package=basic" class="btn btn-primary">Get Started</a>
+                        <p class="best-for">Best for: Individual sellers, first-time users</p>
+                    </div>
+                </div>
+
+                <!-- Premium Listing -->
+                <div class="pricing-card premium featured">
+                    <div class="pricing-badge">Most Popular</div>
+                    <div class="pricing-header">
+                        <h3>Premium Listing</h3>
+                        <div class="price">
+                            <span class="currency">₵</span>
+                            <span class="amount">150</span>
+                            <span class="period">per car</span>
+                        </div>
+                        <p class="duration">45 days listing</p>
+                    </div>
+                    <div class="pricing-features">
+                        <ul>
+                            <li><i class="fas fa-check"></i> Everything in Basic +</li>
+                            <li><i class="fas fa-check"></i> Enhanced social media promotion (3 posts)</li>
+                            <li><i class="fas fa-check"></i> Featured placement on homepage</li>
+                            <li><i class="fas fa-check"></i> Priority search ranking</li>
+                            <li><i class="fas fa-check"></i> WhatsApp business promotion</li>
+                            <li><i class="fas fa-check"></i> Professional listing optimization</li>
+                            <li><i class="fas fa-check"></i> Priority customer support</li>
+                            <li><i class="fas fa-check"></i> Listing analytics (views, contacts)</li>
+                        </ul>
+                    </div>
+                    <div class="pricing-actions">
+                        <a href="sell-form.html?package=premium" class="btn btn-primary">Get Started</a>
+                        <p class="best-for">Best for: Serious sellers, faster sales</p>
+                    </div>
+                </div>
+
+                <!-- VIP Premium -->
+                <div class="pricing-card vip">
+                    <div class="pricing-header">
+                        <h3>VIP Premium</h3>
+                        <div class="price">
+                            <span class="currency">₵</span>
+                            <span class="amount">300</span>
+                            <span class="period">per car</span>
+                        </div>
+                        <p class="duration">60 days listing</p>
+                    </div>
+                    <div class="pricing-features">
+                        <ul>
+                            <li><i class="fas fa-check"></i> Everything in Premium +</li>
+                            <li><i class="fas fa-check"></i> Social media advertising (paid promotion)</li>
+                            <li><i class="fas fa-check"></i> WhatsApp broadcast to buyer database</li>
+                            <li><i class="fas fa-check"></i> Featured car of the week placement</li>
+                            <li><i class="fas fa-check"></i> Professional photography tips</li>
+                            <li><i class="fas fa-check"></i> Listing copywriting assistance</li>
+                            <li><i class="fas fa-check"></i> Priority phone support</li>
+                            <li><i class="fas fa-check"></i> Performance guarantee (30-day refund policy)</li>
+                        </ul>
+                    </div>
+                    <div class="pricing-actions">
+                        <a href="sell-form.html?package=vip" class="btn btn-primary">Get Started</a>
+                        <p class="best-for">Best for: High-value vehicles, fastest sales</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add-On Services -->
+            <div class="addon-services">
+                <div class="section-header">
+                    <h3>Enhance Your Listing</h3>
+                    <p>Add these services to boost your car's visibility and sales potential</p>
+                </div>
+                
+                <div class="addon-grid">
+                    <!-- Professional Photography -->
+                    <div class="addon-card">
+                        <div class="addon-icon">
+                            <i class="fas fa-camera"></i>
+                        </div>
+                        <h4>Professional Photography</h4>
+                        <div class="addon-pricing">
+                            <div class="addon-option">
+                                <span class="addon-name">Basic Package</span>
+                                <span class="addon-price">₵50</span>
+                                <span class="addon-desc">5 professional photos</span>
+                            </div>
+                            <div class="addon-option">
+                                <span class="addon-name">Premium Package</span>
+                                <span class="addon-price">₵100</span>
+                                <span class="addon-desc">10 photos + editing</span>
+                            </div>
+                            <div class="addon-option">
+                                <span class="addon-name">Luxury Package</span>
+                                <span class="addon-price">₵200</span>
+                                <span class="addon-desc">15 photos + drone shots + video</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Social Media Boost -->
+                    <div class="addon-card">
+                        <div class="addon-icon">
+                            <i class="fas fa-share-alt"></i>
+                        </div>
+                        <h4>Social Media Boost</h4>
+                        <div class="addon-pricing">
+                            <div class="addon-option">
+                                <span class="addon-name">Facebook Ads</span>
+                                <span class="addon-price">₵100</span>
+                                <span class="addon-desc">Targeted to car buyers</span>
+                            </div>
+                            <div class="addon-option">
+                                <span class="addon-name">Instagram Promotion</span>
+                                <span class="addon-price">₵75</span>
+                                <span class="addon-desc">Story highlights + posts</span>
+                            </div>
+                            <div class="addon-option">
+                                <span class="addon-name">WhatsApp Marketing</span>
+                                <span class="addon-price">₵50</span>
+                                <span class="addon-desc">Broadcast to buyer database</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Analytics -->
+                    <div class="addon-card">
+                        <div class="addon-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h4>Performance Analytics</h4>
+                        <div class="addon-pricing">
+                            <div class="addon-option">
+                                <span class="addon-name">Basic Report</span>
+                                <span class="addon-price">₵25</span>
+                                <span class="addon-desc">Views, contacts, performance</span>
+                            </div>
+                            <div class="addon-option">
+                                <span class="addon-name">Advanced Report</span>
+                                <span class="addon-price">₵75</span>
+                                <span class="addon-desc">Market analysis, buyer insights</span>
+                            </div>
+                            <div class="addon-option">
+                                <span class="addon-name">Custom Report</span>
+                                <span class="addon-price">₵150</span>
+                                <span class="addon-desc">Tailored business recommendations</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Subscription Plans -->
+                <div class="subscription-plans">
+                    <div class="section-header">
+                        <h3>Unlimited Listings - Save Big!</h3>
+                        <p>Perfect for dealerships and regular sellers</p>
+                    </div>
+                    
+                    <div class="subscription-grid">
+                        <div class="subscription-card">
+                            <h4>Monthly Unlimited</h4>
+                            <div class="subscription-price">
+                                <span class="currency">₵</span>
+                                <span class="amount">400</span>
+                                <span class="period">/month</span>
+                            </div>
+                            <ul>
+                                <li>Unlimited car listings (up to 20 cars)</li>
+                                <li>All Premium features included</li>
+                                <li>Priority customer support</li>
+                                <li>Monthly performance report</li>
+                            </ul>
+                            <a href="sell-form.html?package=monthly" class="btn btn-secondary">Start Monthly</a>
+                        </div>
+
+                        <div class="subscription-card featured">
+                            <div class="subscription-badge">Best Value</div>
+                            <h4>Annual Unlimited</h4>
+                            <div class="subscription-price">
+                                <span class="currency">₵</span>
+                                <span class="amount">3,500</span>
+                                <span class="period">/year</span>
+                                <span class="savings">Save ₵1,300!</span>
+                            </div>
+                            <ul>
+                                <li>Unlimited car listings (up to 50 cars)</li>
+                                <li>All VIP features included</li>
+                                <li>Annual business consultation</li>
+                                <li>Custom marketing materials</li>
+                                <li>Priority listing during peak seasons</li>
+                                <li>VIP customer support line</li>
+                            </ul>
+                            <a href="sell-form.html?package=annual" class="btn btn-primary">Start Annual</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <div class="logo-image">
+                            <img src="photo_2025-02-22_10-14-40.jpg" alt="AutoSell Ltd Logo">
+                        </div>
+                        <span class="logo-text">AutoSell Ltd</span>
+                    </div>
+                    <p>Your trusted platform for car buyers and sellers in Ghana.</p>
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/profile.php?id=61573682903085" target="_blank"><i class="fab fa-facebook"></i></a>
+                        <a href="https://www.instagram.com/autosell_ltd/" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="https://wa.me/233505677556" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#browse">Browse Cars</a></li>
+                        <li><a href="sell-form.html">Sell Your Car</a></li>
+                        <li><a href="#pricing">Pricing</a></li>
+                        <li><a href="#partner">Partner With Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="sell-form.html">Car Advertising</a></li>
+                        <li><a href="#partner">Garage Partnerships</a></li>
+                        <li><a href="#browse">Car Listings</a></li>
+                        <li><a href="#contact">Contact Support</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <ul>
+                        <li><i class="fab fa-whatsapp"></i> WhatsApp: +233 50 567 7556</li>
+                        <li><i class="fab fa-facebook"></i> Facebook: AutoSell Ltd</li>
+                        <li><i class="fab fa-instagram"></i> Instagram: @autosell_ltd</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Ghana</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 AutoSell Ltd. All rights reserved.</p>
+            </div>
+        </div>
+          
+    </footer>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+    
+    <!-- Supabase Configuration -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // Supabase Configuration
+        const SUPABASE_URL = 'https://ukeriimrarcdzpnzvawb.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVrZXJpaW1yYXJjZHpwbnp2YXdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUxMzUzNzMsImV4cCI6MjA3MDcxMTM3M30.URWqGo7T9ERgNPyopiMbIs_muvt4_utyDt_GqwKfLBY';
+        
+        // Initialize Supabase client
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    </script>
+
+
+</body>
+</html>

@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - AutoSell Ltd</title>
+    <meta name="description" content="Admin dashboard for managing car submissions and listings">
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚗</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #FF6600;
+            --secondary-color: #003049;
+            --accent-color: #00B894;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --info-color: #17a2b8;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --white: #ffffff;
+            --gray-100: #f8f9fa;
+            --gray-200: #e9ecef;
+            --gray-300: #dee2e6;
+            --gray-400: #ced4da;
+            --gray-500: #adb5bd;
+            --gray-600: #6c757d;
+            --gray-700: #495057;
+            --gray-800: #343a40;
+            --gray-900: #212529;
+            --border-radius: 8px;
+            --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--gray-100);
+            color: var(--gray-800);
+            line-height: 1.6;
+        }
+
+        .admin-header {
+            background: var(--white);
+            box-shadow: var(--box-shadow);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.2rem;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--gray-600);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--primary-color);
+            background: var(--gray-100);
+        }
+
+        .nav-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .nav-toggle span {
+            width: 25px;
+            height: 3px;
+            background: var(--gray-600);
+            border-radius: 2px;
+            transition: var(--transition);
+        }
+
+        .admin-main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: var(--gray-600);
+            font-size: 1.1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            border-left: 4px solid var(--primary-color);
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--white);
+        }
+
+        .stat-icon.total { background: var(--primary-color); }
+        .stat-icon.new { background: var(--info-color); }
+        .stat-icon.contacted { background: var(--warning-color); }
+        .stat-icon.completed { background: var(--success-color); }
+
+        .stat-content h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-content p {
+            color: var(--gray-600);
+            font-weight: 500;
+        }
+
+        .submissions-section {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+        }
+
+        .section-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
+
+        .filters {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-select,
+        .search-input {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--border-radius);
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .filter-select:focus,
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(255, 102, 0, 0.1);
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background: #e55a00;
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary-color);
+            color: var(--white);
+        }
+
+        .btn-sm {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .submissions-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        .submissions-table th,
+        .submissions-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .submissions-table th {
+            background: var(--gray-100);
+            font-weight: 600;
+            color: var(--gray-700);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .submissions-table tr:hover {
+            background: var(--gray-50);
+        }
+
+        .car-info h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .car-info p {
+            font-size: 0.9rem;
+            color: var(--gray-600);
+            margin-bottom: 0.25rem;
+        }
+
+        .car-info strong {
+            color: var(--gray-700);
+        }
+
+        .seller-info p {
+            font-size: 0.9rem;
+            color: var(--gray-600);
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .seller-info i {
+            color: var(--primary-color);
+            width: 16px;
+        }
+
+        .price {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--success-color);
+        }
+
+        .photos-info {
+            text-align: center;
+        }
+
+        .photo-count {
+            font-size: 0.9rem;
+            color: var(--info-color);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .photo-preview {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .photo-thumbnail {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            display: block;
+            border: 2px solid var(--gray-200);
+            transition: var(--transition);
+        }
+
+        .photo-thumbnail:hover {
+            border-color: var(--primary-color);
+            transform: scale(1.1);
+        }
+
+        .photo-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .no-photos {
+            color: var(--gray-500);
+            font-style: italic;
+            font-size: 0.9rem;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-transform: capitalize;
+        }
+
+        .status-badge.new {
+            background: rgba(23, 162, 184, 0.1);
+            color: var(--info-color);
+        }
+
+        .status-badge.contacted {
+            background: rgba(255, 193, 7, 0.1);
+            color: var(--warning-color);
+        }
+
+        .status-badge.completed {
+            background: rgba(40, 167, 69, 0.1);
+            color: var(--success-color);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-whatsapp {
+            background: #25d366;
+            color: var(--white);
+        }
+
+        .btn-whatsapp:hover {
+            background: #128c7e;
+        }
+
+        .date-info {
+            text-align: center;
+        }
+
+        .date {
+            font-weight: 600;
+            color: var(--secondary-color);
+            font-size: 0.9rem;
+        }
+
+        .time {
+            color: var(--gray-500);
+            font-size: 0.8rem;
+        }
+
+        .loading-state,
+        .empty-state {
+            padding: 3rem;
+            text-align: center;
+            color: var(--gray-600);
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--gray-200);
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            color: var(--gray-400);
+            margin-bottom: 1rem;
+        }
+
+        .empty-state h3 {
+            color: var(--gray-600);
+            margin-bottom: 0.5rem;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: var(--white);
+            margin: 5% auto;
+            padding: 0;
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            color: var(--secondary-color);
+            font-weight: 600;
+        }
+
+        .close {
+            color: var(--gray-500);
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .close:hover {
+            color: var(--gray-700);
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--gray-700);
+        }
+
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--border-radius);
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(255, 102, 0, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .modal-footer {
+            padding: 1.5rem 2rem;
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: var(--white);
+                flex-direction: column;
+                padding: 1rem;
+                box-shadow: var(--box-shadow);
+                border-top: 1px solid var(--gray-200);
+            }
+
+            .nav-menu.active {
+                display: flex;
+            }
+
+            .nav-toggle {
+                display: flex;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filters {
+                justify-content: center;
+            }
+
+            .submissions-table {
+                min-width: 600px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="admin-header">
+        <div class="header-container">
+            <div class="logo-section">
+                <div class="logo-icon">
+                    <i class="fas fa-car"></i>
+                </div>
+                <span class="logo-text">AutoSell Ltd - Admin</span>
+            </div>
+            <nav class="nav-menu" id="navMenu">
+                <a href="index.html" class="nav-link">View Website</a>
+                <a href="#dashboard" class="nav-link active">Dashboard</a>
+                <a href="#submissions" class="nav-link">Submissions</a>
+                <a href="#stats" class="nav-link">Statistics</a>
+            </nav>
+            <div class="nav-toggle" id="navToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="admin-main">
+        <div class="page-header">
+            <h1 class="page-title">Admin Dashboard</h1>
+            <p class="page-subtitle">Manage car submissions and monitor your platform</p>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon total">
+                        <i class="fas fa-car"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="totalSubmissions">0</h3>
+                        <p>Total Submissions</p>
+                    </div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon new">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="newSubmissions">0</h3>
+                        <p>New Submissions</p>
+                    </div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon contacted">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="contactedSubmissions">0</h3>
+                        <p>Contacted</p>
+                    </div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon completed">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="completedSubmissions">0</h3>
+                        <p>Completed</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Submissions Section -->
+        <div class="submissions-section">
+            <div class="section-header">
+                <h2 class="section-title">Car Submissions</h2>
+                <div class="filters">
+                    <select id="statusFilter" class="filter-select">
+                        <option value="">All Status</option>
+                        <option value="new">New</option>
+                        <option value="contacted">Contacted</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                    <input type="text" id="searchInput" class="search-input" placeholder="Search submissions...">
+                    <button id="refreshBtn" class="btn btn-primary">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table class="submissions-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Car Details</th>
+                            <th>Seller Info</th>
+                            <th>Price</th>
+                            <th>Photos</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="submissionsTableBody">
+                        <!-- Submissions will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Loading State -->
+            <div id="loadingState" class="loading-state">
+                <div class="loading-spinner"></div>
+                <p>Loading submissions...</p>
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="empty-state" style="display: none;">
+                <i class="fas fa-inbox"></i>
+                <h3>No submissions yet</h3>
+                <p>When people submit cars through your form, they'll appear here.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Status Update Modal -->
+    <div id="statusModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Update Submission Status</h3>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="statusSelect">New Status:</label>
+                    <select id="statusSelect" class="filter-select">
+                        <option value="new">New</option>
+                        <option value="contacted">Contacted</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="statusNotes">Notes:</label>
+                    <textarea id="statusNotes" placeholder="Add any notes about this submission..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="updateStatusBtn" class="btn btn-primary">Update Status</button>
+                <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Supabase JavaScript Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Admin JavaScript -->
+    <script>
+        // Supabase Configuration
+        const SUPABASE_URL = 'https://ukeriimrarcdzpnzvawb.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVrZXJpaW1yYXJjZHpwbnp2YXdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUxMzUzNzMsImV4cCI6MjA3MDcxMTM3M30.URWqGo7T9ERgNPyopiMbIs_muvt4_utyDt_GqwKfLBY';
+        
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // Global variables
+        let allSubmissions = [];
+        let currentSubmissionId = null;
+
+        // Initialize admin dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile navigation toggle
+            const navToggle = document.getElementById('navToggle');
+            const navMenu = document.getElementById('navMenu');
+            
+            if (navToggle && navMenu) {
+                navToggle.addEventListener('click', function() {
+                    navMenu.classList.toggle('active');
+                    navToggle.classList.toggle('active');
+                });
+                
+                // Close mobile menu when clicking on a link
+                const navLinks = navMenu.querySelectorAll('.nav-link');
+                navLinks.forEach(link => {
+                    link.addEventListener('click', function() {
+                        navMenu.classList.remove('active');
+                        navToggle.classList.remove('active');
+                    });
+                });
+                
+                // Close mobile menu when clicking outside
+                document.addEventListener('click', function(event) {
+                    if (!navToggle.contains(event.target) && !navMenu.contains(event.target)) {
+                        navMenu.classList.remove('active');
+                        navToggle.classList.remove('active');
+                    }
+                });
+            }
+            
+            // Load initial data
+            loadSubmissions();
+            
+            // Add event listeners for filters and search
+            const statusFilter = document.getElementById('statusFilter');
+            const searchInput = document.getElementById('searchInput');
+            const refreshBtn = document.getElementById('refreshBtn');
+            
+            if (statusFilter) {
+                statusFilter.addEventListener('change', filterSubmissions);
+            }
+            
+            if (searchInput) {
+                searchInput.addEventListener('input', filterSubmissions);
+            }
+            
+            if (refreshBtn) {
+                refreshBtn.addEventListener('click', loadSubmissions);
+            }
+            
+            // Setup modal event listeners
+            setupModalEventListeners();
+        });
+        
+        // Setup modal event listeners
+        function setupModalEventListeners() {
+            const closeBtn = document.querySelector('.close');
+            const updateBtn = document.getElementById('updateStatusBtn');
+            
+            if (closeBtn) {
+                closeBtn.addEventListener('click', closeModal);
+            }
+            
+            if (updateBtn) {
+                updateBtn.addEventListener('click', updateSubmissionStatus);
+            }
+            
+            // Close modal when clicking outside
+            window.onclick = function(event) {
+                const modal = document.getElementById('statusModal');
+                if (event.target === modal) {
+                    closeModal();
+                }
+            }
+        }
+
+        // Load submissions from Supabase
+        async function loadSubmissions() {
+            try {
+                showLoading(true);
+                
+                const { data, error } = await supabaseClient
+                    .from('car_submissions')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+                
+                if (error) throw error;
+                
+                allSubmissions = data || [];
+                displaySubmissions(allSubmissions);
+                updateStats();
+                
+            } catch (error) {
+                console.error('Error loading submissions:', error);
+                showError('Failed to load submissions. Please try again.');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Display submissions in table
+        function displaySubmissions(submissions) {
+            const tbody = document.getElementById('submissionsTableBody');
+            
+            if (submissions.length === 0) {
+                showEmptyState();
+                return;
+            }
+            
+            hideEmptyState();
+            
+            tbody.innerHTML = submissions.map(submission => `
+                <tr data-id="${submission.id}">
+                    <td>
+                        <div class="date-info">
+                            <div class="date">${formatDate(submission.created_at)}</div>
+                            <div class="time">${formatTime(submission.created_at)}</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="car-info">
+                            <h4>${submission.car_make} ${submission.car_model}</h4>
+                            <p><strong>Year:</strong> ${submission.year}</p>
+                            <p><strong>Mileage:</strong> ${submission.mileage} km</p>
+                            <p><strong>Location:</strong> ${submission.location}</p>
+                            <p><strong>Condition:</strong> ${submission.car_condition}</p>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="seller-info">
+                            <p><strong>${submission.seller_name}</strong></p>
+                            <p><i class="fas fa-phone"></i> ${submission.seller_phone}</p>
+                            ${submission.seller_email ? `<p><i class="fas fa-envelope"></i> ${submission.seller_email}</p>` : ''}
+                            <p><i class="fas fa-comments"></i> ${submission.preferred_contact}</p>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="price-info">
+                            <span class="price">₵${submission.price.toLocaleString()}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="photos-info">
+                            ${submission.photos && submission.photos.length > 0 ? 
+                                `<div class="photo-count">${submission.photos.length} photo(s)</div>
+                                 <div class="photo-preview">
+                                     ${submission.photos.slice(0, 3).map(photo => 
+                                         `<a href="${photo}" target="_blank" class="photo-thumbnail">
+                                             <img src="${photo}" alt="Car photo" onerror="this.style.display='none'">
+                                         </a>`
+                                     ).join('')}
+                                 </div>` : 
+                                '<span class="no-photos">No photos</span>'
+                            }
+                        </div>
+                    </td>
+                    <td>
+                        <span class="status-badge ${submission.status}">${submission.status}</span>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn btn-sm btn-outline" onclick="viewSubmission(${submission.id})">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-sm btn-primary" onclick="updateStatus(${submission.id})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-whatsapp" onclick="contactSeller('${submission.seller_phone}', '${submission.car_make} ${submission.car_model}')">
+                                <i class="fab fa-whatsapp"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Filter submissions
+        function filterSubmissions() {
+            const statusFilter = document.getElementById('statusFilter').value;
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            let filtered = allSubmissions;
+            
+            // Filter by status
+            if (statusFilter) {
+                filtered = filtered.filter(sub => sub.status === statusFilter);
+            }
+            
+            // Filter by search term
+            if (searchTerm) {
+                filtered = filtered.filter(sub => 
+                    sub.car_make.toLowerCase().includes(searchTerm) ||
+                    sub.car_model.toLowerCase().includes(searchTerm) ||
+                    sub.seller_name.toLowerCase().includes(searchTerm) ||
+                    sub.location.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            displaySubmissions(filtered);
+        }
+
+        // Update statistics
+        function updateStats() {
+            const total = allSubmissions.length;
+            const newCount = allSubmissions.filter(sub => sub.status === 'new').length;
+            const contactedCount = allSubmissions.filter(sub => sub.status === 'contacted').length;
+            const completedCount = allSubmissions.filter(sub => sub.status === 'completed').length;
+            
+            document.getElementById('totalSubmissions').textContent = total;
+            document.getElementById('newSubmissions').textContent = newCount;
+            document.getElementById('contactedSubmissions').textContent = contactedCount;
+            document.getElementById('completedSubmissions').textContent = completedCount;
+        }
+
+        // Update submission status
+        function updateStatus(submissionId) {
+            currentSubmissionId = submissionId;
+            const submission = allSubmissions.find(sub => sub.id === submissionId);
+            
+            if (submission) {
+                document.getElementById('statusSelect').value = submission.status;
+                document.getElementById('statusNotes').value = submission.notes || '';
+                document.getElementById('statusModal').style.display = 'block';
+            }
+        }
+
+        // Update submission status in database
+        async function updateSubmissionStatus() {
+            try {
+                const newStatus = document.getElementById('statusSelect').value;
+                const notes = document.getElementById('statusNotes').value;
+                
+                const { error } = await supabaseClient
+                    .from('car_submissions')
+                    .update({ 
+                        status: newStatus,
+                        notes: notes,
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq('id', currentSubmissionId);
+                
+                if (error) throw error;
+                
+                // Update local data
+                const submissionIndex = allSubmissions.findIndex(sub => sub.id === currentSubmissionId);
+                if (submissionIndex !== -1) {
+                    allSubmissions[submissionIndex].status = newStatus;
+                    allSubmissions[submissionIndex].notes = notes;
+                }
+                
+                // Refresh display
+                displaySubmissions(allSubmissions);
+                updateStats();
+                
+                closeModal();
+                showSuccess('Status updated successfully!');
+                
+            } catch (error) {
+                console.error('Error updating status:', error);
+                showError('Failed to update status. Please try again.');
+            }
+        }
+
+        // View submission details
+        function viewSubmission(submissionId) {
+            const submission = allSubmissions.find(sub => sub.id === submissionId);
+            if (submission) {
+                const details = `
+Car: ${submission.car_make} ${submission.car_model}
+Year: ${submission.year}
+Price: ₵${submission.price.toLocaleString()}
+Mileage: ${submission.mileage} km
+Location: ${submission.location}
+Condition: ${submission.car_condition}
+Description: ${submission.car_description}
+
+Seller: ${submission.seller_name}
+Phone: ${submission.seller_phone}
+${submission.seller_email ? `Email: ${submission.seller_email}` : ''}
+Preferred Contact: ${submission.preferred_contact}
+${submission.additional_info ? `Additional Info: ${submission.additional_info}` : ''}
+
+Status: ${submission.status}
+Submitted: ${formatDate(submission.created_at)} ${formatTime(submission.created_at)}
+${submission.notes ? `Notes: ${submission.notes}` : ''}
+                `;
+                alert(details);
+            }
+        }
+
+        // Contact seller via WhatsApp
+        function contactSeller(phone, carDetails) {
+            const message = `Hi! I'm calling about your ${carDetails} listed on AutoSell Ltd. Is it still available?`;
+            const whatsappUrl = `https://wa.me/233${phone.replace(/\D/g, '')}?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('statusModal').style.display = 'none';
+            currentSubmissionId = null;
+        }
+
+        // Utility functions
+        function formatDate(dateString) {
+            return new Date(dateString).toLocaleDateString('en-GH');
+        }
+
+        function formatTime(dateString) {
+            return new Date(dateString).toLocaleTimeString('en-GH', { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+        }
+
+        function showLoading(show) {
+            document.getElementById('loadingState').style.display = show ? 'flex' : 'none';
+        }
+
+        function showEmptyState() {
+            document.getElementById('emptyState').style.display = 'block';
+            document.querySelector('.table-container').style.display = 'none';
+        }
+
+        function hideEmptyState() {
+            document.getElementById('emptyState').style.display = 'none';
+            document.querySelector('.table-container').style.display = 'block';
+        }
+
+        function showSuccess(message) {
+            // Simple success notification
+            alert('✅ ' + message);
+        }
+
+        function showError(message) {
+            // Simple error notification
+            alert('❌ ' + message);
+        }
+    </script>
+</body>
+</html>
