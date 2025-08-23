@@ -2,12 +2,19 @@
 document.addEventListener('DOMContentLoaded', function() {
     const navToggle = document.getElementById('navToggle');
     const navMenu = document.getElementById('navMenu');
+    const body = document.body;
 
     if (navToggle && navMenu) {
         navToggle.addEventListener('click', function() {
             navMenu.classList.toggle('active');
-            // Animate hamburger menu
             this.classList.toggle('active');
+            
+            // Prevent body scroll when menu is open
+            if (navMenu.classList.contains('active')) {
+                body.style.overflow = 'hidden';
+            } else {
+                body.style.overflow = '';
+            }
         });
 
         // Close mobile menu when clicking on a link
@@ -16,6 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
             link.addEventListener('click', function() {
                 navMenu.classList.remove('active');
                 navToggle.classList.remove('active');
+                body.style.overflow = '';
             });
         });
 
@@ -24,6 +32,16 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!navToggle.contains(event.target) && !navMenu.contains(event.target)) {
                 navMenu.classList.remove('active');
                 navToggle.classList.remove('active');
+                body.style.overflow = '';
+            }
+        });
+        
+        // Close menu on escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape' && navMenu.classList.contains('active')) {
+                navMenu.classList.remove('active');
+                navToggle.classList.remove('active');
+                body.style.overflow = '';
             }
         });
     }
@@ -274,7 +292,7 @@ function createCarCard(car) {
                     <i class="fas fa-comments"></i> Contact Seller
                 </button>
                 <button class="btn btn-details" onclick="viewDetails(${car.id})">
-                    <i class="fas fa-info-circle"></i> More Details
+                    <i class="fas fa-info-circle"></i> Get Details
                 </button>
             </div>
         </div>
@@ -285,7 +303,7 @@ function createCarCard(car) {
 
 // Contact seller function
 function contactSeller(carTitle) {
-    const message = `Hi! I'm interested in the ${carTitle}. Can you provide more details?`;
+    const message = `Hi! I'm interested in the ${carTitle}.\n\nCan you provide more details about this vehicle?`;
     const whatsappUrl = `https://wa.me/233505677556?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
 }
@@ -294,8 +312,10 @@ function contactSeller(carTitle) {
 function viewDetails(carId) {
     const car = sampleCars.find(c => c.id === carId);
     if (car) {
-        // Create a modal or navigate to detail page
-        alert(`Viewing details for ${car.title}`);
+        // Create detailed message for WhatsApp
+        const message = `Hi! I'm interested in learning more about the ${car.title}.\n\nCar Details:\n• Model: ${car.title}\n• Year: ${car.year}\n• Mileage: ${car.mileage}\n• Location: ${car.location}\n• Price: ${car.price}\n\nCan you provide more detailed information about this vehicle?`;
+        const whatsappUrl = `https://wa.me/233505677556?text=${encodeURIComponent(message)}`;
+        window.open(whatsappUrl, '_blank');
     }
 }
 
