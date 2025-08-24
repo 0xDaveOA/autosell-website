@@ -4,10 +4,22 @@ document.addEventListener('DOMContentLoaded', function() {
     const navMenu = document.getElementById('navMenu');
     const body = document.body;
 
+    console.log('Navigation elements found:', { navToggle, navMenu }); // Debug log
+
     if (navToggle && navMenu) {
-        navToggle.addEventListener('click', function() {
+        navToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            console.log('Hamburger clicked!'); // Debug log
+            console.log('Before toggle - Menu classes:', navMenu.className); // Debug log
+            
             navMenu.classList.toggle('active');
             this.classList.toggle('active');
+            
+            console.log('After toggle - Menu classes:', navMenu.className); // Debug log
+            console.log('Menu active state:', navMenu.classList.contains('active')); // Debug log
+            console.log('Menu computed styles:', window.getComputedStyle(navMenu)); // Debug log
             
             // Prevent body scroll when menu is open
             if (navMenu.classList.contains('active')) {

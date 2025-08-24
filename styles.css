@@ -265,15 +265,17 @@ li {
 
 /* Navigation Menu */
 .nav-menu {
-    display: none; /* Hidden on mobile by default */
+    background: var(--white);
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+    box-shadow: var(--shadow-xl);
+    border: 1px solid var(--gray-light);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    display: none;
     position: absolute;
     top: 100%;
     left: 0;
     right: 0;
-    background: var(--white);
-    flex-direction: column;
-    box-shadow: var(--shadow-lg);
-    border-top: 1px solid var(--gray-light);
     z-index: 1000;
     max-height: 0;
     overflow: hidden;
@@ -283,10 +285,13 @@ li {
 }
 
 .nav-menu.active {
-    display: flex;
-    max-height: 400px; /* Adjust based on content */
+    display: flex !important;
+    flex-direction: column;
+    max-height: 400px;
     transform: translateY(0);
     opacity: 1;
+    visibility: visible;
+    overflow: visible;
 }
 
 .nav-link {
@@ -650,13 +655,12 @@ li {
 }
 
 .car-image {
-    width: 120%;
-    margin-left: -10%;
-    height: 280px;
-    position: relative;
-    overflow: hidden;
-    background: var(--gray-light);
+    height: 250px;
+    width: 110%;
+    margin-left: -5%;
+    object-fit: cover;
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    position: relative;
 }
 
 .car-image img {
@@ -672,21 +676,21 @@ li {
 
 .car-badge {
     position: absolute;
-    top: var(--spacing-md);
-    right: 25px;
-    background: #20B2AA; /* Teal color from the image */
-    color: var(--white);
-    padding: var(--spacing-xs) var(--spacing-sm);
-    border-radius: var(--radius-md);
+    top: var(--spacing-sm);
+    right: var(--spacing-md);
     font-size: var(--font-size-sm);
+    padding: var(--spacing-xs) var(--spacing-sm);
     font-weight: 600;
-    z-index: 2;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    background: var(--success);
+    color: var(--white);
+    border-radius: var(--radius-md);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     border: 1px solid rgba(255, 255, 255, 0.3);
     backdrop-filter: blur(4px);
     transition: var(--transition-normal);
+    z-index: 10;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .car-badge:hover {
@@ -3230,6 +3234,27 @@ li {
         border: 1px solid var(--gray-light);
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        max-height: 0;
+        overflow: hidden;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transform: translateY(-10px);
+        opacity: 0;
+    }
+    
+    .nav-menu.active {
+        display: flex !important;
+        flex-direction: column;
+        max-height: 400px;
+        transform: translateY(0);
+        opacity: 1;
+        visibility: visible;
+        overflow: visible;
     }
     
     /* Add backdrop overlay when menu is open */
@@ -3314,5 +3339,48 @@ li {
     
     .stat-number {
         font-size: 2.25rem;
+    }
+}
+
+/* Mobile Car Badge Styling */
+.car-badge {
+    top: var(--spacing-xs);
+    right: var(--spacing-sm);
+    font-size: var(--font-size-xs);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+}
+
+/* Ensure navigation works on all mobile devices */
+@media (max-width: 768px) {
+    .nav-menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        background: var(--white);
+        box-shadow: var(--shadow-lg);
+        border-top: 1px solid var(--gray-light);
+        flex-direction: column;
+        max-height: 0;
+        overflow: hidden;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transform: translateY(-10px);
+        opacity: 0;
+    }
+    
+    .nav-menu.active {
+        display: flex !important;
+        max-height: 400px;
+        transform: translateY(0);
+        opacity: 1;
+        visibility: visible;
+        overflow: visible;
+    }
+    
+    .nav-toggle {
+        display: flex;
     }
 }
