@@ -5,6 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sell Your Car - AutoSell Ltd</title>
     <meta name="description" content="Advertise your car with AutoSell Ltd. Reach thousands of potential buyers in Ghana with our professional advertising service.">
+    
+    <!-- Facebook Pixel Code -->
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '768063732271819');  // AutoSell Ltd Pixel ID
+    fbq('track', 'PageView');
+    </script>
+    <noscript>
+    <img height="1" width="1" style="display:none"
+    src="https://www.facebook.net/tr?id=768063732271819&ev=PageView&noscript=1"/>
+    </noscript>
+    <!-- End Facebook Pixel Code -->
+    
     <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚗</text></svg>">
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -74,7 +94,7 @@
 
                     <div class="form-group">
                         <label for="packageType">Advertising Package *</label>
-                        <select id="packageType" name="packageType" required>
+                        <select id="packageType" name="packageType" required onchange="trackPackageSelection(this.value)">
                             <option value="">Select your package</option>
                             <option value="basic">Basic Listing - ₵65 (15 days)</option>
                             <option value="premium">Premium Listing - ₵150 (45 days)</option>
@@ -473,6 +493,17 @@
             });
         }
         
+        // Track package selection
+        function trackPackageSelection(packageType) {
+            if (typeof fbq !== 'undefined' && packageType) {
+                fbq('track', 'Lead', {
+                    package_type: packageType,
+                    value: packageType === 'basic' ? 65 : packageType === 'premium' ? 150 : 300,
+                    currency: 'GHS'
+                });
+            }
+        }
+
         // Form submission handler
         async function handleFormSubmit(e) {
             e.preventDefault();
@@ -605,6 +636,16 @@
                 }
                 
                 console.log('Database insert successful:', result);
+                
+                // Track successful form submission with Facebook Pixel
+                if (typeof fbq !== 'undefined') {
+                    fbq('track', 'CompleteRegistration', {
+                        content_name: 'Car Listing Form',
+                        package_type: data.packageType,
+                        value: data.packageType === 'basic' ? 65 : data.packageType === 'premium' ? 150 : 300,
+                        currency: 'GHS'
+                    });
+                }
                 
                 // Success! Show confirmation
                 const photoMessage = photoUrls.length > 0 ? 

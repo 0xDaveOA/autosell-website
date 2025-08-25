@@ -5,6 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AutoSell Ltd - Your Trusted Platform for Car Buyers and Sellers in Ghana</title>
     <meta name="description" content="Modern, mobile-first platform connecting car buyers with trusted sellers in Ghana. Browse cars, advertise your vehicle, and find your perfect match.">
+    
+    <!-- Facebook Pixel Code -->
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '768063732271819');  // AutoSell Ltd Pixel ID
+    fbq('track', 'PageView');
+    </script>
+    <noscript>
+    <img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=768063732271819&ev=PageView&noscript=1"/>
+    </noscript>
+    <!-- End Facebook Pixel Code -->
+    
     <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚗</text></svg>">
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -167,7 +187,7 @@
                         </ul>
                     </div>
                     <div class="pricing-actions">
-                        <a href="sell-form.html?package=basic" class="btn btn-primary">Get Started</a>
+                        <a href="sell-form.html?package=basic" class="btn btn-primary" onclick="trackPackageClick('basic')">Get Started</a>
                         <p class="best-for">Best for: Individual sellers, first-time users</p>
                     </div>
                 </div>
@@ -197,7 +217,7 @@
                         </ul>
                     </div>
                     <div class="pricing-actions">
-                        <a href="sell-form.html?package=premium" class="btn btn-primary">Get Started</a>
+                        <a href="sell-form.html?package=premium" class="btn btn-primary" onclick="trackPackageClick('premium')">Get Started</a>
                         <p class="best-for">Best for: Serious sellers, faster sales</p>
                     </div>
                 </div>
@@ -227,7 +247,7 @@
                         </ul>
                     </div>
                     <div class="pricing-actions">
-                        <a href="sell-form.html?package=vip" class="btn btn-primary">Get Started</a>
+                        <a href="sell-form.html?package=vip" class="btn btn-primary" onclick="trackPackageClick('vip')">Get Started</a>
                         <p class="best-for">Best for: Premium vehicles, maximum exposure</p>
                     </div>
                 </div>
@@ -526,6 +546,29 @@
     <!-- Scripts -->
     <script src="script.js"></script>
     
+    <!-- Pricing Section View Tracking -->
+    <script>
+        // Track when pricing section comes into view
+        document.addEventListener('DOMContentLoaded', function() {
+            const pricingSection = document.getElementById('pricing');
+            if (pricingSection) {
+                const observer = new IntersectionObserver(function(entries) {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting && typeof fbq !== 'undefined') {
+                            fbq('track', 'ViewContent', {
+                                content_name: 'Pricing Packages',
+                                content_category: 'Pricing'
+                            });
+                            observer.unobserve(entry.target); // Only track once
+                        }
+                    });
+                }, { threshold: 0.5 });
+                
+                observer.observe(pricingSection);
+            }
+        });
+    </script>
+    
     <!-- Supabase Configuration -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
@@ -537,6 +580,41 @@
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     </script>
 
+    <!-- Enhanced Facebook Pixel Tracking -->
+    <script>
+        // Track package selection (when someone selects a package)
+        function trackPackageSelection(packageType) {
+            fbq('track', 'Lead', {
+                package_type: packageType,
+                value: packageType === 'basic' ? 65 : packageType === 'premium' ? 150 : 300,
+                currency: 'GHS'
+            });
+        }
+
+        // Track form submission
+        function trackFormSubmission() {
+            fbq('track', 'CompleteRegistration', {
+                content_name: 'Car Listing Form'
+            });
+        }
+
+        // Track pricing section views
+        function trackPricingView() {
+            fbq('track', 'ViewContent', {
+                content_name: 'Pricing Packages',
+                content_category: 'Pricing'
+            });
+        }
+
+        // Track when someone clicks on a package
+        function trackPackageClick(packageType) {
+            fbq('track', 'InitiateCheckout', {
+                package_type: packageType,
+                value: packageType === 'basic' ? 65 : packageType === 'premium' ? 150 : 300,
+                currency: 'GHS'
+            });
+        }
+    </script>
 
 </body>
 </html>
