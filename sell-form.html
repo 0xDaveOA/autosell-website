@@ -72,6 +72,17 @@
                         </select>
                     </div>
 
+                    <div class="form-group">
+                        <label for="packageType">Advertising Package *</label>
+                        <select id="packageType" name="packageType" required>
+                            <option value="">Select your package</option>
+                            <option value="basic">Basic Listing - ₵65 (15 days)</option>
+                            <option value="premium">Premium Listing - ₵150 (45 days)</option>
+                            <option value="vip">VIP Premium - ₵300 (90 days)</option>
+                        </select>
+                        <small class="form-help">Choose the package that best fits your needs and budget</small>
+                    </div>
+
                     <div class="form-row">
                         <div class="form-group">
                             <label for="carMake">Car Make *</label>
@@ -470,6 +481,13 @@
             const formData = new FormData(this);
             const data = Object.fromEntries(formData);
             
+            // Validate package selection
+            if (!data.packageType) {
+                alert('❌ Please select an advertising package before submitting.');
+                document.getElementById('packageType').focus();
+                return;
+            }
+            
             // Get submit button and store original text
             const submitBtn = document.getElementById('submitBtn');
             const originalText = submitBtn.textContent;
@@ -563,6 +581,7 @@
                     price: parseFloat(data.carPrice),
                     mileage: parseInt(data.carMileage),
                     location: data.sellerLocation,
+                    package_type: data.packageType, // Track which package was selected
                     car_condition: data.carCondition,
                     car_description: data.carDescription,
                     seller_name: data.sellerName,
@@ -592,14 +611,22 @@
                     ` with ${photoUrls.length} photo(s)` : 
                     ' (no photos uploaded)';
                 
-                alert(`✅ Thank you! Your car has been submitted successfully${photoMessage}. We'll contact you shortly.`);
+                // Get package details for confirmation
+                const packageDetails = {
+                    'basic': 'Basic Listing (₵65 - 15 days)',
+                    'premium': 'Premium Listing (₵150 - 45 days)',
+                    'vip': 'VIP Premium (₵300 - 90 days)'
+                };
+                const selectedPackage = packageDetails[data.packageType] || 'Selected Package';
+                
+                alert(`✅ Thank you! Your car has been submitted successfully${photoMessage}.\n\n📦 Package: ${selectedPackage}\n💰 We'll contact you shortly to arrange payment and activate your listing.`);
                 
                 // Reset form
                 this.reset();
                 resetUploadArea();
                 
                 // Also open WhatsApp for immediate contact
-                const message = `Hi! I just submitted my car on AutoSell Ltd. Please check your dashboard.`;
+                const message = `Hi! I just submitted my car on AutoSell Ltd with ${selectedPackage}. Please check your dashboard.`;
                 const whatsappUrl = `https://wa.me/233505677556?text=${encodeURIComponent(message)}`;
                 window.open(whatsappUrl, '_blank');
                 

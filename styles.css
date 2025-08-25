@@ -1817,6 +1817,26 @@ li {
     line-height: 1.6;
 }
 
+.form-help {
+    display: block;
+    margin-top: 8px;
+    font-size: 0.875rem;
+    color: var(--gray-dark);
+    font-style: italic;
+}
+
+/* Package selection styling */
+.form-group select[name="packageType"] {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-color: var(--primary-accent);
+    font-weight: 600;
+}
+
+.form-group select[name="packageType"]:focus {
+    border-color: var(--primary-accent);
+    box-shadow: 0 0 0 4px rgba(255, 102, 0, 0.1);
+}
+
 .photo-upload {
     border: 3px dashed #cbd5e1;
     border-radius: 16px;
@@ -2770,10 +2790,10 @@ li {
     right: 0;
     background: var(--primary-accent);
     color: var(--white);
-    padding: var(--spacing-sm) var(--spacing-md);
-    font-size: var(--font-size-sm);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: var(--font-size-xs);
     font-weight: 600;
-    border-radius: 0 var(--radius-2xl) 0 var(--radius-lg);
+    border-radius: 0 var(--radius-lg) 0 var(--radius-md);
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
@@ -2865,7 +2885,7 @@ li {
 
 .best-for {
     font-size: var(--font-size-sm);
-    color: var(--gray-medium);
+    color: var(--secondary-accent);
     font-style: italic;
 }
 
