@@ -3404,3 +3404,146 @@ li {
         display: flex;
     }
 }
+
+/* Photo Upload Styles */
+.photo-upload {
+    margin-bottom: var(--spacing-md);
+    position: relative;
+}
+
+.photo-upload input[type="file"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.upload-area {
+    border: 2px dashed var(--gray-medium);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    text-align: center;
+    cursor: pointer;
+    transition: var(--transition-normal);
+    background: var(--gray-light);
+}
+
+.upload-area:hover {
+    border-color: var(--primary-accent);
+    background: rgba(255, 102, 0, 0.05);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.upload-area i {
+    font-size: var(--font-size-3xl);
+    color: var(--gray-dark);
+    margin-bottom: var(--spacing-sm);
+}
+
+.upload-area p {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: var(--spacing-xs);
+}
+
+.upload-area small {
+    color: var(--gray-dark);
+    font-size: var(--font-size-sm);
+}
+
+.photo-preview {
+    margin-top: var(--spacing-md);
+    padding: var(--spacing-md);
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--gray-medium);
+}
+
+.photo-preview h4 {
+    margin-bottom: var(--spacing-md);
+    color: var(--secondary-accent);
+    font-size: var(--font-size-lg);
+}
+
+.photo-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: var(--spacing-sm);
+    max-width: 100%;
+}
+
+.preview-image {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+    border: 2px solid var(--gray-medium);
+    transition: var(--transition-normal);
+    cursor: pointer;
+}
+
+.preview-image:hover {
+    border-color: var(--primary-accent);
+    transform: scale(1.05);
+    box-shadow: var(--shadow-md);
+}
+
+
+
+/* Remove button for individual photos */
+.photo-item {
+    position: relative;
+    display: inline-block;
+    animation: fadeInUp 0.3s ease-out;
+}
+
+.photo-remove {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: var(--error);
+    color: var(--white);
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-normal);
+}
+
+.photo-remove:hover {
+    background: #c0392b;
+    transform: scale(1.1);
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+    .photo-list {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: var(--spacing-xs);
+    }
+    
+    .preview-image {
+        height: 100px;
+    }
+    
+    .upload-area {
+        padding: var(--spacing-lg);
+    }
+}

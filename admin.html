@@ -439,6 +439,20 @@
         .btn-whatsapp:hover {
             background: #128c7e;
         }
+        
+        .btn-info {
+            background: var(--info-color);
+            color: var(--white);
+        }
+        
+        .btn-info:hover {
+            background: #138496;
+        }
+        
+        .btn-info:disabled {
+            background: var(--gray-400);
+            cursor: not-allowed;
+        }
 
         .date-info {
             text-align: center;
@@ -878,21 +892,35 @@
         async function loadSubmissions() {
             try {
                 showLoading(true);
+                console.log('Loading submissions...');
                 
                 const { data, error } = await supabaseClient
                     .from('car_submissions')
                     .select('*')
                     .order('created_at', { ascending: false });
                 
-                if (error) throw error;
+                console.log('Supabase response:', { data, error });
+                
+                if (error) {
+                    console.error('Supabase error:', error);
+                    throw error;
+                }
                 
                 allSubmissions = data || [];
-                displaySubmissions(allSubmissions);
-                updateStats();
+                console.log('Submissions loaded:', allSubmissions);
+                
+                if (allSubmissions.length === 0) {
+                    console.log('No submissions found, showing empty state');
+                    showEmptyState();
+                } else {
+                    console.log('Displaying submissions...');
+                    displaySubmissions(allSubmissions);
+                    updateStats();
+                }
                 
             } catch (error) {
                 console.error('Error loading submissions:', error);
-                showError('Failed to load submissions. Please try again.');
+                showError('Failed to load submissions. Please try again. Error: ' + error.message);
             } finally {
                 showLoading(false);
             }
@@ -900,16 +928,27 @@
 
         // Display submissions in table
         function displaySubmissions(submissions) {
+            console.log('Displaying submissions:', submissions);
             const tbody = document.getElementById('submissionsTableBody');
             
+            if (!tbody) {
+                console.error('Table body element not found!');
+                return;
+            }
+            
             if (submissions.length === 0) {
+                console.log('No submissions to display, showing empty state');
                 showEmptyState();
                 return;
             }
             
+            console.log('Hiding empty state and displaying submissions...');
             hideEmptyState();
             
-            tbody.innerHTML = submissions.map(submission => `
+            tbody.innerHTML = submissions.map(submission => {
+                console.log('Processing submission:', submission);
+                console.log('Photos field:', submission.photos, 'Type:', typeof submission.photos);
+                return `
                 <tr data-id="${submission.id}">
                     <td>
                         <div class="date-info">
@@ -941,17 +980,55 @@
                     </td>
                     <td>
                         <div class="photos-info">
-                            ${submission.photos && submission.photos.length > 0 ? 
-                                `<div class="photo-count">${submission.photos.length} photo(s)</div>
-                                 <div class="photo-preview">
-                                     ${submission.photos.slice(0, 3).map(photo => 
-                                         `<a href="${photo}" target="_blank" class="photo-thumbnail">
-                                             <img src="${photo}" alt="Car photo" onerror="this.style.display='none'">
-                                         </a>`
-                                     ).join('')}
-                                 </div>` : 
-                                '<span class="no-photos">No photos</span>'
-                            }
+                            ${(() => {
+                                console.log('Photos field for submission:', submission.id, submission.photos);
+                                console.log('Photo metadata:', submission.photo_metadata);
+                                
+                                let photoCount = 0;
+                                let photoArray = [];
+                                
+                                // Handle different photo storage formats
+                                if (submission.photos && typeof submission.photos === 'string') {
+                                    try {
+                                        photoArray = JSON.parse(submission.photos);
+                                        photoCount = photoArray.length;
+                                    } catch (e) {
+                                        console.log('Failed to parse photos JSON:', e);
+                                    }
+                                } else if (submission.photos && Array.isArray(submission.photos)) {
+                                    photoArray = submission.photos;
+                                    photoCount = photoArray.length;
+                                }
+                                
+                                if (photoCount > 0) {
+                                    // Show photo count and previews
+                                    let photoInfo = `<div class="photo-count">${photoCount} photo(s)</div>`;
+                                    
+                                    // Add folder info if available
+                                    if (submission.photo_metadata && submission.photo_metadata.length > 0) {
+                                        const firstPhoto = submission.photo_metadata[0];
+                                        if (firstPhoto.filename) {
+                                            const folderPath = firstPhoto.filename.split('/').slice(0, -1).join('/');
+                                            photoInfo += `<div class="photo-folder" style="font-size: 0.8rem; color: #666; margin-bottom: 0.5rem;">
+                                                📁 ${folderPath}
+                                            </div>`;
+                                        }
+                                    }
+                                    
+                                    // Add photo previews
+                                    photoInfo += `<div class="photo-preview">
+                                        ${photoArray.slice(0, 3).map(photo => 
+                                            `<a href="${photo}" target="_blank" class="photo-thumbnail" title="Click to view full size">
+                                                <img src="${photo}" alt="Car photo" onerror="this.style.display='none'">
+                                            </a>`
+                                        ).join('')}
+                                    </div>`;
+                                    
+                                    return photoInfo;
+                                }
+                                
+                                return '<span class="no-photos">No photos</span>';
+                            })()}
                         </div>
                     </td>
                     <td>
@@ -959,19 +1036,23 @@
                     </td>
                     <td>
                         <div class="action-buttons">
-                            <button class="btn btn-sm btn-outline" onclick="viewSubmission(${submission.id})">
+                            <button class="btn btn-sm btn-outline" onclick="viewSubmission(${submission.id})" title="View Details">
                                 <i class="fas fa-eye"></i>
                             </button>
-                            <button class="btn btn-sm btn-primary" onclick="updateStatus(${submission.id})">
+                            <button class="btn btn-sm btn-info" onclick="viewAllPhotos(${submission.id})" title="View All Photos" ${submission.photos && submission.photos.length > 0 ? '' : 'disabled'}>
+                                <i class="fas fa-images"></i>
+                            </button>
+                            <button class="btn btn-sm btn-primary" onclick="updateStatus(${submission.id})" title="Update Status">
                                 <i class="fas fa-edit"></i>
                             </button>
-                            <button class="btn btn-sm btn-whatsapp" onclick="contactSeller('${submission.seller_phone}', '${submission.car_make} ${submission.car_model}')">
+                            <button class="btn btn-sm btn-whatsapp" onclick="contactSeller('${submission.seller_phone}', '${submission.car_make} ${submission.car_model}')" title="Contact Seller">
                                 <i class="fab fa-whatsapp"></i>
                             </button>
                         </div>
                     </td>
                 </tr>
-            `).join('');
+            `;
+            }).join('');
         }
 
         // Filter submissions
@@ -1065,7 +1146,7 @@
         function viewSubmission(submissionId) {
             const submission = allSubmissions.find(sub => sub.id === submissionId);
             if (submission) {
-                const details = `
+                let details = `
 Car: ${submission.car_make} ${submission.car_model}
 Year: ${submission.year}
 Price: ₵${submission.price.toLocaleString()}
@@ -1084,7 +1165,54 @@ Status: ${submission.status}
 Submitted: ${formatDate(submission.created_at)} ${formatTime(submission.created_at)}
 ${submission.notes ? `Notes: ${submission.notes}` : ''}
                 `;
+                
+                // Add photo information if available
+                if (submission.photo_metadata && submission.photo_metadata.length > 0) {
+                    details += `\n\n📸 PHOTOS (${submission.photo_metadata.length}):`;
+                    submission.photo_metadata.forEach((photo, index) => {
+                        details += `\n${index + 1}. ${photo.originalName}`;
+                        details += `\n   📁 ${photo.filename}`;
+                        details += `\n   📏 ${(photo.size / 1024).toFixed(1)} KB`;
+                        details += `\n   🔗 ${photo.url}`;
+                    });
+                } else if (submission.photos && submission.photos.length > 0) {
+                    details += `\n\n📸 PHOTOS (${submission.photos.length}):`;
+                    submission.photos.forEach((photo, index) => {
+                        details += `\n${index + 1}. ${photo}`;
+                    });
+                }
+                
                 alert(details);
+            }
+        }
+
+        // View all photos for a submission
+        function viewAllPhotos(submissionId) {
+            const submission = allSubmissions.find(sub => sub.id === submissionId);
+            if (submission) {
+                let photoInfo = `📸 ALL PHOTOS FOR: ${submission.car_make} ${submission.car_model}\n\n`;
+                
+                if (submission.photo_metadata && submission.photo_metadata.length > 0) {
+                    // Enhanced photo information available
+                    submission.photo_metadata.forEach((photo, index) => {
+                        photoInfo += `📷 Photo ${index + 1}:\n`;
+                        photoInfo += `   📁 Folder: ${photo.filename.split('/').slice(0, -1).join('/')}\n`;
+                        photoInfo += `   📄 Original: ${photo.originalName}\n`;
+                        photoInfo += `   📏 Size: ${(photo.size / 1024).toFixed(1)} KB\n`;
+                        photoInfo += `   🔗 URL: ${photo.url}\n`;
+                        photoInfo += `   ⏰ Uploaded: ${formatDate(photo.uploadedAt)} ${formatTime(photo.uploadedAt)}\n\n`;
+                    });
+                } else if (submission.photos && submission.photos.length > 0) {
+                    // Basic photo URLs only
+                    submission.photos.forEach((photo, index) => {
+                        photoInfo += `📷 Photo ${index + 1}:\n`;
+                        photoInfo += `   🔗 URL: ${photo}\n\n`;
+                    });
+                } else {
+                    photoInfo = '❌ No photos found for this submission.';
+                }
+                
+                alert(photoInfo);
             }
         }
 

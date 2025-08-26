@@ -29,6 +29,60 @@
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Critical photo preview styles - backup to ensure thumbnails work */
+        .photo-list {
+            display: grid !important;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)) !important;
+            gap: 12px !important;
+            max-width: 100% !important;
+        }
+        
+        .preview-image {
+            width: 100% !important;
+            height: 120px !important;
+            object-fit: cover !important;
+            border-radius: 8px !important;
+            border: 2px solid #e0e0e0 !important;
+            transition: all 0.3s ease !important;
+            cursor: pointer !important;
+        }
+        
+        .preview-image:hover {
+            border-color: #FF6600 !important;
+            transform: scale(1.05) !important;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+        }
+        
+        .photo-item {
+            position: relative !important;
+            display: inline-block !important;
+        }
+        
+        .photo-remove {
+            position: absolute !important;
+            top: -8px !important;
+            right: -8px !important;
+            background: #E74C3C !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 50% !important;
+            width: 24px !important;
+            height: 24px !important;
+            font-size: 14px !important;
+            cursor: pointer !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            transition: all 0.3s ease !important;
+        }
+        
+        .photo-remove:hover {
+            background: #c0392b !important;
+            transform: scale(1.1) !important;
+        }
+    </style>
 </head>
 <body>
     <!-- Header -->
@@ -392,16 +446,42 @@
                     `;
                     uploadArea.style.display = 'block';
                     
+                    // Add click handler to change photos
+                    uploadArea.addEventListener('click', function() {
+                        document.getElementById('carPhotos').click();
+                    });
+                    
                     for (let i = 0; i < files.length; i++) {
                         const file = files[i];
                         console.log(`Processing preview for file ${i + 1}:`, file.name);
                         const reader = new FileReader();
                         reader.onload = function(e) {
+                            // Create photo item container
+                            const photoItem = document.createElement('div');
+                            photoItem.className = 'photo-item';
+                            photoItem.dataset.index = i;
+                            
+                            // Create image
                             const img = document.createElement('img');
                             img.src = e.target.result;
                             img.classList.add('preview-image');
                             img.alt = `Photo ${i + 1}`;
-                            photoList.appendChild(img);
+                            
+                            // Create remove button
+                            const removeBtn = document.createElement('button');
+                            removeBtn.className = 'photo-remove';
+                            removeBtn.innerHTML = '×';
+                            removeBtn.title = 'Remove photo';
+                            removeBtn.onclick = function() {
+                                removePhoto(i, photoItem);
+                            };
+                            
+                            // Add image and remove button to container
+                            photoItem.appendChild(img);
+                            photoItem.appendChild(removeBtn);
+                            
+                            // Add to photo list
+                            photoList.appendChild(photoItem);
                             console.log(`Preview created for: ${file.name}`);
                         };
                         reader.readAsDataURL(file);
@@ -470,6 +550,33 @@
             }
         }
         
+        // Function to remove individual photo
+        function removePhoto(index, photoItem) {
+            const fileInput = document.getElementById('carPhotos');
+            const photoPreview = document.getElementById('photoPreview');
+            const photoList = document.getElementById('photoList');
+            
+            // Remove the photo item from DOM
+            photoItem.remove();
+            
+            // Check if there are any photos left
+            if (photoList.children.length === 0) {
+                // No photos left, reset to upload area
+                resetUploadArea();
+            } else {
+                // Update the count display
+                const remainingCount = photoList.children.length;
+                const uploadArea = document.getElementById('uploadArea');
+                uploadArea.innerHTML = `
+                    <i class="fas fa-camera"></i>
+                    <p>${remainingCount} photo(s) selected</p>
+                    <small>Click to change photos</small>
+                `;
+            }
+            
+            console.log(`Photo ${index + 1} removed`);
+        }
+
         // Function to reset upload area
         function resetUploadArea() {
             const uploadArea = document.getElementById('uploadArea');
@@ -497,7 +604,6 @@
         function trackPackageSelection(packageType) {
             if (typeof fbq !== 'undefined' && packageType) {
                 fbq('track', 'Lead', {
-                    package_type: packageType,
                     value: packageType === 'basic' ? 65 : packageType === 'premium' ? 150 : 300,
                     currency: 'GHS'
                 });
@@ -530,6 +636,7 @@
                 
                 // Handle file uploads first (only if photos are selected)
                 let photoUrls = [];
+                let photoMetadata = []; // Store photo info with metadata
                 const photoInput = document.getElementById('carPhotos');
                 
                 console.log('Photo input:', photoInput);
@@ -556,12 +663,13 @@
                                 continue;
                             }
                             
-                            // Create unique filename
+                            // Create organized folder structure
                             const timestamp = Date.now();
                             const randomId = Math.random().toString(36).substring(2, 15);
-                            const fileName = `car_photos/${timestamp}_${randomId}_${file.name}`;
+                            const carFolder = `${data.carMake}_${data.carModel}_${timestamp}`;
+                            const fileName = `submissions/${carFolder}/${timestamp}_${randomId}_${file.name}`;
                             
-                            console.log(`Uploading to: ${fileName}`);
+                            console.log(`Uploading to organized folder: ${fileName}`);
                             
                             // Upload file to Supabase storage
                             const { data: uploadData, error: uploadError } = await supabaseClient.storage
@@ -584,8 +692,20 @@
                                     .getPublicUrl(fileName);
                                 
                                 if (urlData && urlData.publicUrl) {
+                                    // Store photo URL and metadata
                                     photoUrls.push(urlData.publicUrl);
-                                    console.log('Photo URL added:', urlData.publicUrl);
+                                    
+                                    // Store detailed photo information
+                                    photoMetadata.push({
+                                        url: urlData.publicUrl,
+                                        filename: fileName,
+                                        originalName: file.name,
+                                        size: file.size,
+                                        type: file.type,
+                                        uploadedAt: new Date().toISOString()
+                                    });
+                                    
+                                    console.log('Photo URL and metadata added:', urlData.publicUrl);
                                 } else {
                                     console.warn('No public URL generated for:', fileName);
                                 }
@@ -594,6 +714,7 @@
                         
                         console.log(`Total photos uploaded: ${photoUrls.length}`);
                         console.log('Photo URLs:', photoUrls);
+                        console.log('Photo metadata:', photoMetadata);
                         
                     } catch (photoError) {
                         console.error('Photo processing error:', photoError);
@@ -612,7 +733,7 @@
                     price: parseFloat(data.carPrice),
                     mileage: parseInt(data.carMileage),
                     location: data.sellerLocation,
-                    package_type: data.packageType, // Track which package was selected
+                    package_type: data.packageType,
                     car_condition: data.carCondition,
                     car_description: data.carDescription,
                     seller_name: data.sellerName,
@@ -621,7 +742,8 @@
                     preferred_contact: data.preferredContact,
                     additional_info: data.additionalInfo || '',
                     status: 'new',
-                    photos: photoUrls.length > 0 ? photoUrls : null
+                    photos: photoUrls.length > 0 ? photoUrls : null,
+                    photo_metadata: photoMetadata.length > 0 ? photoMetadata : null
                 };
                 
                 console.log('Submitting data to Supabase:', submissionData);
@@ -641,7 +763,6 @@
                 if (typeof fbq !== 'undefined') {
                     fbq('track', 'CompleteRegistration', {
                         content_name: 'Car Listing Form',
-                        package_type: data.packageType,
                         value: data.packageType === 'basic' ? 65 : data.packageType === 'premium' ? 150 : 300,
                         currency: 'GHS'
                     });
