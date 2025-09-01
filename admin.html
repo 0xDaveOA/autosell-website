@@ -40,6 +40,112 @@
             --transition: all 0.3s ease;
         }
 
+        /* Login Screen Styles */
+        .login-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .login-container {
+            background: var(--white);
+            padding: 3rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .login-logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 2.5rem;
+            margin: 0 auto 1.5rem;
+        }
+
+        .login-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .login-subtitle {
+            color: var(--gray-600);
+            margin-bottom: 2rem;
+        }
+
+        .login-form input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--gray-300);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            transition: var(--transition);
+        }
+
+        .login-form input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(255, 102, 0, 0.1);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary-color);
+            color: var(--white);
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .login-btn:hover {
+            background: #e55a00;
+            transform: translateY(-2px);
+        }
+
+        .login-error {
+            color: var(--danger-color);
+            background: rgba(220, 53, 69, 0.1);
+            padding: 0.75rem;
+            border-radius: var(--border-radius);
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .logout-btn {
+            background: var(--danger-color);
+            color: var(--white);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .logout-btn:hover {
+            background: #c82333;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--gray-100);
@@ -639,6 +745,27 @@
     </style>
 </head>
 <body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-container">
+            <div class="login-logo">
+                <i class="fas fa-car"></i>
+            </div>
+            <h2 class="login-title">Admin Login</h2>
+            <p class="login-subtitle">Please enter your credentials to access the dashboard.</p>
+            <form id="loginForm">
+                <div class="form-group">
+                    <input type="text" id="username" placeholder="Username" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="password" placeholder="Password" required>
+                </div>
+                <button type="submit" class="login-btn">Login</button>
+            </form>
+            <div id="loginError" class="login-error">Invalid username or password.</div>
+        </div>
+    </div>
+
     <!-- Header -->
     <header class="admin-header">
         <div class="header-container">
@@ -653,6 +780,9 @@
                 <a href="#dashboard" class="nav-link active">Dashboard</a>
                 <a href="#submissions" class="nav-link">Submissions</a>
                 <a href="#stats" class="nav-link">Statistics</a>
+                <button onclick="logout()" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
             </nav>
             <div class="nav-toggle" id="navToggle">
                 <span></span>
@@ -814,6 +944,60 @@
 
         // Initialize admin dashboard
         document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is already logged in
+            const isLoggedIn = localStorage.getItem('adminLoggedIn');
+            
+            if (isLoggedIn === 'true') {
+                // User is logged in, show main content
+                showAdminContent();
+            } else {
+                // User is not logged in, show login screen
+                showLoginScreen();
+            }
+            
+            // Setup login form event listeners
+            setupLoginFormEventListeners();
+        });
+        
+        // Show admin content after successful login
+        function showAdminContent() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.querySelector('header').style.display = 'block';
+            document.querySelector('main').style.display = 'block';
+            
+            // Load submissions and setup event listeners
+            loadSubmissions();
+            setupEventListeners();
+        }
+        
+        // Show login screen
+        function showLoginScreen() {
+            document.getElementById('loginScreen').style.display = 'flex';
+            document.querySelector('header').style.display = 'none';
+            document.querySelector('main').style.display = 'none';
+        }
+        
+        // Setup all event listeners for the admin dashboard
+        function setupEventListeners() {
+            const statusFilter = document.getElementById('statusFilter');
+            const searchInput = document.getElementById('searchInput');
+            const refreshBtn = document.getElementById('refreshBtn');
+            
+            if (statusFilter) {
+                statusFilter.addEventListener('change', filterSubmissions);
+            }
+            
+            if (searchInput) {
+                searchInput.addEventListener('input', filterSubmissions);
+            }
+            
+            if (refreshBtn) {
+                refreshBtn.addEventListener('click', loadSubmissions);
+            }
+            
+            // Setup modal event listeners
+            setupModalEventListeners();
+            
             // Mobile navigation toggle
             const navToggle = document.getElementById('navToggle');
             const navMenu = document.getElementById('navMenu');
@@ -841,30 +1025,7 @@
                     }
                 });
             }
-            
-            // Load initial data
-            loadSubmissions();
-            
-            // Add event listeners for filters and search
-            const statusFilter = document.getElementById('statusFilter');
-            const searchInput = document.getElementById('searchInput');
-            const refreshBtn = document.getElementById('refreshBtn');
-            
-            if (statusFilter) {
-                statusFilter.addEventListener('change', filterSubmissions);
-            }
-            
-            if (searchInput) {
-                searchInput.addEventListener('input', filterSubmissions);
-            }
-            
-            if (refreshBtn) {
-                refreshBtn.addEventListener('click', loadSubmissions);
-            }
-            
-            // Setup modal event listeners
-            setupModalEventListeners();
-        });
+        }
         
         // Setup modal event listeners
         function setupModalEventListeners() {
@@ -1263,6 +1424,53 @@ ${submission.notes ? `Notes: ${submission.notes}` : ''}
         function showError(message) {
             // Simple error notification
             alert('❌ ' + message);
+        }
+
+        // Login Form Event Listeners
+        function setupLoginFormEventListeners() {
+            const loginForm = document.getElementById('loginForm');
+            const loginError = document.getElementById('loginError');
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+
+            if (loginForm) {
+                loginForm.addEventListener('submit', async function(event) {
+                    event.preventDefault();
+                    const username = usernameInput.value;
+                    const password = passwordInput.value;
+
+                    if (username === 'admin' && password === 'admin123') {
+                        // Successful login, hide login screen and show main content
+                        localStorage.setItem('adminLoggedIn', 'true');
+                        showAdminContent();
+                        showSuccess('Login successful! Welcome to Admin Dashboard!');
+                    } else {
+                        loginError.style.display = 'block';
+                        usernameInput.value = '';
+                        passwordInput.value = '';
+                        passwordInput.focus();
+                    }
+                });
+            }
+        }
+
+        // Logout function
+        function logout() {
+            // Clear login state
+            localStorage.removeItem('adminLoggedIn');
+            
+            // Show login screen again
+            showLoginScreen();
+            
+            // Clear form
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('loginError').style.display = 'none';
+            
+            // Focus on username field
+            document.getElementById('username').focus();
+            
+            showSuccess('Logged out successfully!');
         }
     </script>
 </body>

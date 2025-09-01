@@ -167,15 +167,17 @@
             
             <div class="pricing-grid">
                 <!-- Basic Listing -->
-                <div class="pricing-card basic">
+                <div class="pricing-card basic featured">
+                    <div class="pricing-badge">🔥 PROMO UNTIL END OF SEPTEMBER</div>
                     <div class="pricing-header">
                         <h3>Basic Listing</h3>
                         <div class="price">
                             <span class="currency">₵</span>
-                            <span class="amount">65</span>
+                            <span class="amount">25.50</span>
                             <span class="period">per car</span>
                         </div>
                         <p class="duration">15 days listing</p>
+                        <p class="promo-note">🎉 Limited Time Offer!</p>
                     </div>
                     <div class="pricing-features">
                         <ul>
@@ -187,14 +189,13 @@
                         </ul>
                     </div>
                     <div class="pricing-actions">
-still on                        <a href="sell-form.html?package=basic" class="btn btn-primary" onclick="trackPackageClick('basic')">Get Started</a>
+                        <a href="sell-form.html?package=basic" class="btn btn-primary" onclick="trackPackageClick('basic')">Get Started Now!</a>
                         <p class="best-for">Best for: Individual sellers, first-time users</p>
                     </div>
                 </div>
 
                 <!-- Premium Listing -->
-                <div class="pricing-card premium featured">
-                    <div class="pricing-badge">Most Popular</div>
+                <div class="pricing-card premium disabled">
                     <div class="pricing-header">
                         <h3>Premium Listing</h3>
                         <div class="price">
@@ -203,6 +204,7 @@ still on                        <a href="sell-form.html?package=basic" class="bt
                             <span class="period">per car</span>
                         </div>
                         <p class="duration">45 days listing</p>
+                        <p class="unavailable-note">⏸️ Temporarily Unavailable</p>
                     </div>
                     <div class="pricing-features">
                         <ul>
@@ -217,13 +219,13 @@ still on                        <a href="sell-form.html?package=basic" class="bt
                         </ul>
                     </div>
                     <div class="pricing-actions">
-                        <a href="sell-form.html?package=premium" class="btn btn-primary" onclick="trackPackageClick('premium')">Get Started</a>
+                        <button class="btn btn-disabled" disabled>Coming Soon</button>
                         <p class="best-for">Best for: Serious sellers, faster sales</p>
                     </div>
                 </div>
 
                 <!-- VIP Premium -->
-                <div class="pricing-card vip">
+                <div class="pricing-card vip disabled">
                     <div class="pricing-header">
                         <h3>VIP Premium</h3>
                         <div class="price">
@@ -232,6 +234,7 @@ still on                        <a href="sell-form.html?package=basic" class="bt
                             <span class="period">per car</span>
                         </div>
                         <p class="duration">90 days listing</p>
+                        <p class="unavailable-note">⏸️ Temporarily Unavailable</p>
                     </div>
                     <div class="pricing-features">
                         <ul>
@@ -247,12 +250,11 @@ still on                        <a href="sell-form.html?package=basic" class="bt
                         </ul>
                     </div>
                     <div class="pricing-actions">
-                        <a href="sell-form.html?package=vip" class="btn btn-primary" onclick="trackPackageClick('vip')">Get Started</a>
+                        <button class="btn btn-disabled" disabled>Coming Soon</button>
                         <p class="best-for">Best for: Premium vehicles, maximum exposure</p>
                     </div>
                 </div>
             </div>
-        </div>
         
             <!-- Add-On Services -->
             <div class="addon-services">
@@ -610,7 +612,7 @@ still on                        <a href="sell-form.html?package=basic" class="bt
         function trackPackageClick(packageType) {
             fbq('track', 'InitiateCheckout', {
                 package_type: packageType,
-                value: packageType === 'basic' ? 65 : packageType === 'premium' ? 150 : 300,
+                value: packageType === 'basic' ? 25.50 : packageType === 'premium' ? 150 : 300,
                 currency: 'GHS'
             });
         }

@@ -2889,6 +2889,92 @@ li {
     font-style: italic;
 }
 
+/* Disabled Pricing Cards */
+.pricing-card.disabled {
+    opacity: 0.6;
+    filter: grayscale(0.8);
+    pointer-events: none;
+    position: relative;
+}
+
+.pricing-card.disabled::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(128, 128, 128, 0.1);
+    border-radius: var(--radius-xl);
+    z-index: 1;
+}
+
+.pricing-card.disabled .pricing-header,
+.pricing-card.disabled .pricing-features,
+.pricing-card.disabled .pricing-actions {
+    position: relative;
+    z-index: 2;
+}
+
+.pricing-card.disabled:hover {
+    transform: none;
+    box-shadow: var(--shadow-md);
+}
+
+/* Promo and Unavailable Notes */
+.promo-note {
+    font-size: var(--font-size-sm);
+    color: var(--highlight);
+    font-weight: 600;
+    margin-top: var(--spacing-xs);
+    text-align: center;
+}
+
+.unavailable-note {
+    font-size: var(--font-size-sm);
+    color: var(--gray-medium);
+    font-weight: 500;
+    margin-top: var(--spacing-xs);
+    text-align: center;
+}
+
+/* Disabled Button */
+.btn-disabled {
+    background: var(--gray-light) !important;
+    color: var(--gray-medium) !important;
+    cursor: not-allowed !important;
+    opacity: 0.7;
+}
+
+.btn-disabled:hover {
+    background: var(--gray-light) !important;
+    color: var(--gray-medium) !important;
+    transform: none !important;
+}
+
+/* Enhanced Promo Badge */
+.pricing-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: linear-gradient(135deg, var(--highlight), var(--primary-accent));
+    color: var(--white);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    border-radius: 0 var(--radius-lg) 0 var(--radius-md);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 8px rgba(255, 107, 0, 0.3);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
 /* Add-On Services */
 .addon-services {
     margin-top: var(--spacing-4xl);

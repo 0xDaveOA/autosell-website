@@ -150,11 +150,11 @@
                         <label for="packageType">Advertising Package *</label>
                         <select id="packageType" name="packageType" required onchange="trackPackageSelection(this.value)">
                             <option value="">Select your package</option>
-                            <option value="basic">Basic Listing - ₵65 (15 days)</option>
-                            <option value="premium">Premium Listing - ₵150 (45 days)</option>
-                            <option value="vip">VIP Premium - ₵300 (90 days)</option>
+                            <option value="basic">🔥 Basic Listing - ₵25.50 (15 days) - PROMO UNTIL END OF SEPTEMBER!</option>
+                            <option value="premium" disabled>Premium Listing - ₵150 (45 days) - Temporarily Unavailable</option>
+                            <option value="vip" disabled>VIP Premium - ₵300 (90 days) - Temporarily Unavailable</option>
                         </select>
-                        <small class="form-help">Choose the package that best fits your needs and budget</small>
+                        <small class="form-help">🔥 Limited time offer! Basic listing now only ₵25.50 until end of September</small>
                     </div>
 
                     <div class="form-row">
@@ -602,9 +602,16 @@
         
         // Track package selection
         function trackPackageSelection(packageType) {
+            // Prevent selection of disabled packages
+            if (packageType === 'premium' || packageType === 'vip') {
+                alert('⚠️ This package is temporarily unavailable. Please select the Basic Listing package.');
+                document.getElementById('packageType').value = '';
+                return;
+            }
+            
             if (typeof fbq !== 'undefined' && packageType) {
                 fbq('track', 'Lead', {
-                    value: packageType === 'basic' ? 65 : packageType === 'premium' ? 150 : 300,
+                    value: packageType === 'basic' ? 25.50 : packageType === 'premium' ? 150 : 300,
                     currency: 'GHS'
                 });
             }
@@ -622,6 +629,13 @@
             if (!data.packageType) {
                 alert('❌ Please select an advertising package before submitting.');
                 document.getElementById('packageType').focus();
+                return;
+            }
+            
+            // Ensure only basic package is selected (others are disabled)
+            if (data.packageType !== 'basic') {
+                alert('⚠️ Only the Basic Listing package is currently available. Please select the Basic Listing package.');
+                document.getElementById('packageType').value = 'basic';
                 return;
             }
             
@@ -763,7 +777,7 @@
                 if (typeof fbq !== 'undefined') {
                     fbq('track', 'CompleteRegistration', {
                         content_name: 'Car Listing Form',
-                        value: data.packageType === 'basic' ? 65 : data.packageType === 'premium' ? 150 : 300,
+                        value: data.packageType === 'basic' ? 25.50 : data.packageType === 'premium' ? 150 : 300,
                         currency: 'GHS'
                     });
                 }
@@ -775,9 +789,9 @@
                 
                 // Get package details for confirmation
                 const packageDetails = {
-                    'basic': 'Basic Listing (₵65 - 15 days)',
-                    'premium': 'Premium Listing (₵150 - 45 days)',
-                    'vip': 'VIP Premium (₵300 - 90 days)'
+                    'basic': '🔥 Basic Listing (₵25.50 - 15 days) - PROMO UNTIL END OF SEPTEMBER!',
+                    'premium': 'Premium Listing (₵150 - 45 days) - Temporarily Unavailable',
+                    'vip': 'VIP Premium (₵300 - 90 days) - Temporarily Unavailable'
                 };
                 const selectedPackage = packageDetails[data.packageType] || 'Selected Package';
                 
