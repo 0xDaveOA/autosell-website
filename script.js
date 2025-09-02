@@ -159,91 +159,196 @@ function addScrollAnimations() {
 const sampleCars = [
     {
         id: 1,
+        title: "Hyundai Elantra SPAC",
+        price: "₵93,000", 
+        year: "2015",
+        mileage: "₵3K Commission",
+        location: "Botwe",
+        images: [
+            "Car Photos/Hyundai Elantra SPAC 2015/1.jpg",
+            "Car Photos/Hyundai Elantra SPAC 2015/2.jpg",
+            "Car Photos/Hyundai Elantra SPAC 2015/3.jpg",
+            "Car Photos/Hyundai Elantra SPAC 2015/4.jpg"
+        ],
+        status: "Available"
+    },
+    {
+        id: 2,
         title: "Acura MDX A-Spec",
         price: "₵1,200,000",
         year: "2022",
         mileage: "45,760 km",
         location: "Ashongman Estate",
         images: [
-            "Acura MDX/1.jpg",
-            "Acura MDX/2.jpg",
-            "Acura MDX/3.jpg",
-            "Acura MDX/4.jpg"
-        ],
-        status: "Available"
-    },
-    {
-        id: 2,
-        title: "Benz C250",
-        price: "₵195,000",
-        year: "2018",
-        mileage: "93,750 km",
-        location: "East Legon",
-        images: [
-            "Benz C250/1.jpg",
-            "Benz C250/2.jpg",
-            "Benz C250/3.jpg",
-            "Benz C250/4.jpg"
+            "Car Photos/Acura MDX/1.jpg",
+            "Car Photos/Acura MDX/2.jpg",
+            "Car Photos/Acura MDX/3.jpg",
+            "Car Photos/Acura MDX/4.jpg"
         ],
         status: "Available"
     },
     {
         id: 3,
+        title: "Toyota Corolla S 2015",
+        price: "₵140,000",
+        year: "2015",
+        mileage: "Fully Loaded Option",
+        location: "Dansoman",
+        images: [
+            "Car Photos/Toyota Corolla S 2015/1.jpg",
+            "Car Photos/Toyota Corolla S 2015/2.jpg",
+            "Car Photos/Toyota Corolla S 2015/3.jpg",
+            "Car Photos/Toyota Corolla S 2015/4.jpg"
+        ],
+        status: "Available"
+    },
+    {
+        id: 4,
+        title: "Benz C250 SPAC",
+        price: "₵135,000",
+        year: " 2015",
+        mileage: "₵5K Commission",
+        location: "Dansoman",
+        images: [
+            "Car Photos/Benz C250 SPAC/1.jpg",
+            "Car Photos/Benz C250 SPAC/2.jpg",
+            "Car Photos/Benz C250 SPAC/3.jpg",
+            "Car Photos/Benz C250 SPAC/4.jpg"
+        ],
+        status: "Available"
+    },
+    {
+        id: 5,
+        title: "Toyota Corolla LE 2018",
+        price: "₵143,000",
+        year: "Registered 2022",
+        mileage: "98,690 km",
+        location: "Accra",
+        images: [
+            "Car Photos/TC LE 2018/1.jpg",
+            "Car Photos/TC LE 2018/2.jpg",
+            "Car Photos/TC LE 2018/3.jpg",
+            "Car Photos/TC LE 2018/4.jpg"
+        ],
+        status: "Available"
+    },
+    {
+        id: 6,
+        title: "Toyota Corolla LE 2016",
+        price: "₵128,000",
+        year: "2016",
+        mileage: "Registered 2021",
+        location: "Accra",
+        images: [
+            "Car Photos/TC LE 2016/1.jpg",
+            "Car Photos/TC LE 2016/2.jpg",
+            "Car Photos/TC LE 2016/3.jpg",
+            "Car Photos/TC LE 2016/4.jpg"
+        ],
+        status: "Available"
+    },
+    {
+        id: 7,
+        title: "Benz C250",
+        price: "₵195,000",
+        year: "2018",
+        mileage: "93,750 km",
+        location: "Tantra Hills",
+        images: [
+            "Car Photos/Benz C250/1.jpg",
+            "Car Photos/Benz C250/2.jpg",
+            "Car Photos/Benz C250/3.jpg",
+            "Car Photos/Benz C250/4.jpg"
+        ],
+        status: "Available"
+    },
+    {
+        id: 8,
         title: "Chevy Suburban",
         price: "₵1,600,000",
         year: "2016",
         mileage: "28,000 km",
         location: "Accra",
         images: [
-            "Chevy Suburban/1.jpg",
-            "Chevy Suburban/2.jpg",
-            "Chevy Suburban/3.jpg",
-            "Chevy Suburban/4.jpg"
+            "Car Photos/Chevy Suburban/1.jpg",
+            "Car Photos/Chevy Suburban/2.jpg",
+            "Car Photos/Chevy Suburban/3.jpg",
+            "Car Photos/Chevy Suburban/4.jpg"
         ],
         status: "Available"
     },
     {
-        id: 4,
-        title: "Elantra 2014",
-        price: "₵132,000",
-        year: "2014",
-        mileage: "138,000 km",
-        location: "Dansoman",
-        images: [
-            "Elantra 2014/1.jpg",
-            "Elantra 2014/2.jpg",
-            "Elantra 2014/3.jpg",
-            "Elantra 2014/4.jpg"
-        ],
-        status: "Available"
-    },
-    {
-        id: 5,
+        id: 9,
         title: "Ford Escape",
         price: "₵162,000",
         year: "2014",
         mileage: "89,980 km",
         location: "Dome",
         images: [
-            "Ford Escape/1.jpg",
-            "Ford Escape/2.jpg",
-            "Ford Escape/3.jpg",
-            "Ford Escape/4.jpg"
+            "Car Photos/Ford Escape/1.jpg",
+            "Car Photos/Ford Escape/2.jpg",
+            "Car Photos/Ford Escape/3.jpg",
+            "Car Photos/Ford Escape/4.jpg"
         ],
         status: "Available"
     },
     {
-        id: 6,
-        title: "Toyota Corolla LE",
-        price: "₵150,000",
-        year: "2015",
-        mileage: "98,589 km",
+        id: 10,
+        title: "Elantra 2014",
+        price: "₵132,000",
+        year: "2014",
+        mileage: "138,000 km",
         location: "Dansoman",
         images: [
-            "Toyota Corolla LE/1.jpg",
-            "Toyota Corolla LE/2.jpg",
-            "Toyota Corolla LE/3.jpg",
-            "Toyota Corolla LE/4.jpg"
+            "Car Photos/Elantra 2014/1.jpg",
+            "Car Photos/Elantra 2014/2.jpg",
+            "Car Photos/Elantra 2014/3.jpg",
+            "Car Photos/Elantra 2014/4.jpg"
+        ],
+        status: "Sold"
+    },
+    {
+        id: 11,
+        title: "Toyota Corolla LE 2015",
+        price: "₵150,000",
+        year: "2015",
+        mileage: "95,890 km",
+        location: "Dansoman",
+        images: [
+            "Car Photos/Toyota Corolla LE/1.jpg",
+            "Car Photos/Toyota Corolla LE/2.jpg",
+            "Car Photos/Toyota Corolla LE/3.jpg",
+            "Car Photos/Toyota Corolla LE/4.jpg"
+        ],
+        status: "Sold"
+    },
+    {
+        id: 12,
+        title: "Toyota Camry SE",
+        price: "₵320,000",
+        year: "2010",
+        mileage: "100,000+ km",
+        location: "Accra",
+        images: [
+            "Car Photos/Toyota Camry SE 2010/1.jpg",
+            "Car Photos/Toyota Camry SE 2010/2.jpg",
+            "Car Photos/Toyota Camry SE 2010/3.jpg",
+            "Car Photos/Toyota Camry SE 2010/4.jpg"
+        ],
+        status: "Available"
+    },
+    {
+        id: 13,
+        title: "Hyundai Elantra 2013",
+        price: "₵89,500",
+        year: "Registered 2021",
+        mileage: "Negotiable",
+        location: "Adenta",
+        images: [
+            "Car Photos/HE 2013/1.jpg",
+            "Car Photos/HE 2013/2.jpg",
+            "Car Photos/HE 2013/3.jpg",
+            "Car Photos/HE 2013/4.jpg"
         ],
         status: "Available"
     }
