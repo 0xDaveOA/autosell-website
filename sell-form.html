@@ -150,11 +150,11 @@
                         <label for="packageType">Advertising Package *</label>
                         <select id="packageType" name="packageType" required onchange="trackPackageSelection(this.value)">
                             <option value="">Select your package</option>
-                            <option value="basic">🔥 Basic Listing - ₵25.50 (15 days) - PROMO UNTIL END OF SEPTEMBER!</option>
-                            <option value="premium" disabled>Premium Listing - ₵150 (45 days) - Temporarily Unavailable</option>
-                            <option value="vip" disabled>VIP Premium - ₵300 (90 days) - Temporarily Unavailable</option>
+                            <option value="free">🔥 FREE Basic Listing - ₵0 (7 days) - NO COST, NO RISK!</option>
+                            <option value="premium">Premium Services - ₵25+ (add-on services)</option>
+                            <option value="complete">Complete Package - ₵200 (all-inclusive)</option>
                         </select>
-                        <small class="form-help">🔥 Limited time offer! Basic listing now only ₵25.50 until end of September</small>
+                        <small class="form-help">🎉 Start FREE! No payment required for basic listing until end of September</small>
                     </div>
 
                     <div class="form-row">
@@ -257,7 +257,7 @@
                         <label class="checkbox-label">
                             <input type="checkbox" id="agreeTerms" name="agreeTerms" required>
                             <span class="checkmark"></span>
-                            I agree to the terms and conditions and understand there is a small fee for this service *
+                            I agree to the terms and conditions and understand the pricing structure *
                         </label>
                     </div>
 
@@ -309,8 +309,8 @@
                         <li>Fill out this form</li>
                         <li>We'll review your submission</li>
                         <li>Contact you within 24 hours</li>
-                        <li>Pay the small advertising fee</li>
-                        <li>Your car goes live immediately</li>
+                        <li>FREE listing goes live immediately!</li>
+                        <li>Upgrade to premium services if needed</li>
                     </ol>
                 </div>
 
@@ -602,16 +602,16 @@
         
         // Track package selection
         function trackPackageSelection(packageType) {
-            // Prevent selection of disabled packages
-            if (packageType === 'premium' || packageType === 'vip') {
-                alert('⚠️ This package is temporarily unavailable. Please select the Basic Listing package.');
-                document.getElementById('packageType').value = '';
-                return;
-            }
-            
             if (typeof fbq !== 'undefined' && packageType) {
+                const packageValues = {
+                    'free': 0,
+                    'premium': 25,
+                    'complete': 200
+                };
+                
                 fbq('track', 'Lead', {
-                    value: packageType === 'basic' ? 25.50 : packageType === 'premium' ? 150 : 300,
+                    package_type: packageType,
+                    value: packageValues[packageType] || 0,
                     currency: 'GHS'
                 });
             }
@@ -629,13 +629,6 @@
             if (!data.packageType) {
                 alert('❌ Please select an advertising package before submitting.');
                 document.getElementById('packageType').focus();
-                return;
-            }
-            
-            // Ensure only basic package is selected (others are disabled)
-            if (data.packageType !== 'basic') {
-                alert('⚠️ Only the Basic Listing package is currently available. Please select the Basic Listing package.');
-                document.getElementById('packageType').value = 'basic';
                 return;
             }
             
@@ -775,9 +768,16 @@
                 
                 // Track successful form submission with Facebook Pixel
                 if (typeof fbq !== 'undefined') {
+                    const packageValues = {
+                        'free': 0,
+                        'premium': 25,
+                        'complete': 200
+                    };
+                    
                     fbq('track', 'CompleteRegistration', {
                         content_name: 'Car Listing Form',
-                        value: data.packageType === 'basic' ? 25.50 : data.packageType === 'premium' ? 150 : 300,
+                        package_type: data.packageType,
+                        value: packageValues[data.packageType] || 0,
                         currency: 'GHS'
                     });
                 }
@@ -789,21 +789,27 @@
                 
                 // Get package details for confirmation
                 const packageDetails = {
-                    'basic': '🔥 Basic Listing (₵25.50 - 15 days) - PROMO UNTIL END OF SEPTEMBER!',
-                    'premium': 'Premium Listing (₵150 - 45 days) - Temporarily Unavailable',
-                    'vip': 'VIP Premium (₵300 - 90 days) - Temporarily Unavailable'
+                    'free': '🔥 FREE Basic Listing (₵0 - 7 days) - NO COST, NO RISK!',
+                    'premium': 'Premium Services (₵25+ - add-on services)',
+                    'complete': 'Complete Package (₵200 - all-inclusive)'
                 };
                 const selectedPackage = packageDetails[data.packageType] || 'Selected Package';
                 
-                alert(`✅ Thank you! Your car has been submitted successfully${photoMessage}.\n\n📦 Package: ${selectedPackage}\n💰 We'll contact you shortly to arrange payment and activate your listing.`);
+                const paymentMessage = data.packageType === 'free' ? 
+                    '🎉 No payment required! Your listing will be activated immediately.' :
+                    '💰 We\'ll contact you shortly to arrange payment and activate your listing.';
+                
+                alert(`✅ Thank you! Your car has been submitted successfully${photoMessage}.\n\n📦 Package: ${selectedPackage}\n${paymentMessage}`);
                 
                 // Reset form
                 this.reset();
                 resetUploadArea();
                 
                 // Also open WhatsApp for immediate contact
-                const message = `Hi! I just submitted my car on AutoSell Ltd with ${selectedPackage}. Please check your dashboard.`;
-                const whatsappUrl = `https://wa.me/233505677556?text=${encodeURIComponent(message)}`;
+                const whatsappMessage = data.packageType === 'free' ? 
+                    `Hi! I just submitted my car on AutoSell Ltd with FREE Basic Listing. Please activate my listing.` :
+                    `Hi! I just submitted my car on AutoSell Ltd with ${selectedPackage}. Please check your dashboard.`;
+                const whatsappUrl = `https://wa.me/233505677556?text=${encodeURIComponent(whatsappMessage)}`;
                 window.open(whatsappUrl, '_blank');
                 
                 // Show WhatsApp instruction
