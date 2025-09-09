@@ -162,6 +162,7 @@ const sampleCars = [
         title: "Hyundai Elantra SPAC",
         price: "₵93,000", 
         year: "2015",
+        
         mileage: "₵3K Commission",
         location: "Botwe",
         images: [
