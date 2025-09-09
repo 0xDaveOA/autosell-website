@@ -170,7 +170,8 @@ const sampleCars = [
             "Car Photos/Hyundai Elantra SPAC 2015/3.jpg",
             "Car Photos/Hyundai Elantra SPAC 2015/4.jpg"
         ],
-        status: "Available"
+        status: "Available",
+        hot: true
     },
     {
         id: 2,
@@ -189,6 +190,22 @@ const sampleCars = [
     },
     {
         id: 3,
+        title: "Hyundai Tucson 2013",
+        price: "₵160,000",
+        year: "2024 Registered",
+        mileage: "60,000 km",
+        location: "Accra",
+        images: [
+            "Car Photos/Hyundai Tucson/1.jpg",
+            "Car Photos/Hyundai Tucson/2.jpg",
+            "Car Photos/Hyundai Tucson/3.jpg",
+            "Car Photos/Hyundai Tucson/4.jpg"
+        ],
+        status: "Available",
+        hot: true
+    },
+    {
+        id: 4,
         title: "Toyota Corolla S 2015",
         price: "₵140,000",
         year: "2015",
@@ -200,10 +217,11 @@ const sampleCars = [
             "Car Photos/Toyota Corolla S 2015/3.jpg",
             "Car Photos/Toyota Corolla S 2015/4.jpg"
         ],
-        status: "Available"
+        status: "Available",
+        hot: true
     },
     {
-        id: 4,
+        id: 5,
         title: "Benz C250 SPAC",
         price: "₵135,000",
         year: " 2015",
@@ -218,7 +236,7 @@ const sampleCars = [
         status: "Available"
     },
     {
-        id: 5,
+        id: 6,
         title: "Toyota Corolla LE 2018",
         price: "₵143,000",
         year: "Registered 2022",
@@ -230,10 +248,11 @@ const sampleCars = [
             "Car Photos/TC LE 2018/3.jpg",
             "Car Photos/TC LE 2018/4.jpg"
         ],
-        status: "Available"
+        status: "Available",
+        hot: true
     },
     {
-        id: 6,
+        id: 7,
         title: "Toyota Corolla LE 2016",
         price: "₵128,000",
         year: "2016",
@@ -245,10 +264,11 @@ const sampleCars = [
             "Car Photos/TC LE 2016/3.jpg",
             "Car Photos/TC LE 2016/4.jpg"
         ],
-        status: "Available"
+        status: "Available",
+        hot: true
     },
     {
-        id: 7,
+        id: 8,
         title: "Benz C250",
         price: "₵195,000",
         year: "2018",
@@ -260,10 +280,11 @@ const sampleCars = [
             "Car Photos/Benz C250/3.jpg",
             "Car Photos/Benz C250/4.jpg"
         ],
-        status: "Available"
+        status: "Available",
+        hot: true
     },
     {
-        id: 8,
+        id: 9,
         title: "Chevy Suburban",
         price: "₵1,600,000",
         year: "2016",
@@ -278,7 +299,7 @@ const sampleCars = [
         status: "Available"
     },
     {
-        id: 9,
+        id: 10,
         title: "Ford Escape",
         price: "₵162,000",
         year: "2014",
@@ -290,10 +311,11 @@ const sampleCars = [
             "Car Photos/Ford Escape/3.jpg",
             "Car Photos/Ford Escape/4.jpg"
         ],
-        status: "Available"
+        status: "Available",
+        hot: true
     },
     {
-        id: 10,
+        id: 11,
         title: "Elantra 2014",
         price: "₵132,000",
         year: "2014",
@@ -308,7 +330,7 @@ const sampleCars = [
         status: "Sold"
     },
     {
-        id: 11,
+        id: 12,
         title: "Toyota Corolla LE 2015",
         price: "₵150,000",
         year: "2015",
@@ -323,7 +345,7 @@ const sampleCars = [
         status: "Sold"
     },
     {
-        id: 12,
+        id: 13,
         title: "Toyota Camry SE",
         price: "₵320,000",
         year: "2010",
@@ -338,7 +360,7 @@ const sampleCars = [
         status: "Available"
     },
     {
-        id: 13,
+        id: 14,
         title: "Hyundai Elantra 2013",
         price: "₵89,500",
         year: "Registered 2021",
@@ -377,6 +399,7 @@ function createCarCard(car) {
         <div class="car-image">
             <img src="${car.images[0]}" alt="${car.title}" onerror="this.src='placeholder.jpg'">
             <span class="car-badge">${car.status}</span>
+            ${car.hot ? '<span class="hot-badge">🔥</span>' : ''}
             
             <!-- Navigation Arrows -->
             <button class="car-nav-btn car-nav-prev" onclick="changeCarImage(${car.id}, 'prev')">

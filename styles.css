@@ -698,6 +698,46 @@ li {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
+/* Hot Badge Styling */
+.hot-badge {
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    font-size: 24px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #FF6B35, #F7931E);
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.6);
+    border: 3px solid var(--white);
+    transition: var(--transition-normal);
+    z-index: 11;
+    animation: hotPulse 2s infinite;
+}
+
+.hot-badge:hover {
+    transform: scale(1.15);
+    box-shadow: 0 6px 20px rgba(255, 107, 53, 0.8);
+}
+
+@keyframes hotPulse {
+    0% { 
+        transform: scale(1);
+        box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
+    }
+    50% { 
+        transform: scale(1.05);
+        box-shadow: 0 6px 16px rgba(255, 107, 53, 0.6);
+    }
+    100% { 
+        transform: scale(1);
+        box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
+    }
+}
+
 .car-image-overlay {
     position: absolute;
     bottom: 0;
