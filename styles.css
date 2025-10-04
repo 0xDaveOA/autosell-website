@@ -212,7 +212,7 @@ li {
     right: 0;
     background: var(--white);
     box-shadow: var(--shadow-sm);
-    z-index: 1000;
+    z-index: 9999;
     transition: var(--transition-normal);
 }
 
@@ -266,44 +266,29 @@ li {
 /* Navigation Menu */
 .nav-menu {
     background: var(--white);
-    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
-    box-shadow: var(--shadow-xl);
-    border: 1px solid var(--gray-light);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    display: none;
     position: absolute;
     top: 100%;
     left: 0;
     right: 0;
-    z-index: 1000;
-    max-height: 0;
-    overflow: hidden;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    transform: translateY(-10px);
-    opacity: 0;
+    z-index: 9998;
+    display: none;
+    flex-direction: column;
 }
 
 .nav-menu.active {
     display: flex !important;
-    flex-direction: column;
-    max-height: 400px;
-    transform: translateY(0);
-    opacity: 1;
-    visibility: visible;
-    overflow: visible;
 }
 
 .nav-link {
-    color: var(--gray-dark);
-    font-weight: 500;
-    transition: var(--transition-normal);
-    position: relative;
+    color: var(--text-color);
+    font-weight: 600;
     padding: var(--spacing-md);
     border-bottom: 1px solid var(--gray-light);
     text-align: center;
     text-decoration: none;
     display: block;
+    background: var(--white);
+    transition: var(--transition-normal);
 }
 
 .nav-link:hover,
@@ -3436,11 +3421,15 @@ li {
         border-bottom: none;
     }
     
-    .nav-link:hover,
-    .nav-link.active {
-        background: var(--primary-accent);
+    .nav-link:hover {
         color: var(--white);
-        transform: translateX(10px);
+        background: var(--primary-accent);
+    }
+
+    .nav-link.active {
+        color: var(--white);
+        background: var(--primary-accent);
+        font-weight: 700;
     }
     
     .nav-toggle {
@@ -3522,11 +3511,6 @@ li {
     
     .nav-menu.active {
         display: flex !important;
-        max-height: 400px;
-        transform: translateY(0);
-        opacity: 1;
-        visibility: visible;
-        overflow: visible;
     }
     
     .nav-toggle {
