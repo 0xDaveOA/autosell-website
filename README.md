@@ -1,6 +1,6 @@
 # AutoSell Ltd - Car Advertising Website
 
-A modern, mobile-first car advertising platform for Ghana, built with HTML, CSS, and JavaScript, integrated with Supabase for backend functionality.
+The live marketplace runs in the **`web/`** Next.js app (Supabase-backed). Legacy static pages in this repo remain for backward compatibility — use **https://autosellgh.com** for production listings and **`/sell`** for submissions.
 
 ## 🚗 Features
 
@@ -24,11 +24,11 @@ A modern, mobile-first car advertising platform for Ghana, built with HTML, CSS,
 
 ```
 autosell-website/
-├── index.html          # Main homepage
-├── sell-form.html      # Car submission form
-├── admin.html          # Admin dashboard
-├── styles.css          # Main stylesheet
-├── script.js           # JavaScript functionality
+├── web/                # Production Next.js app (browse, sell, admin)
+├── index.html          # Legacy static homepage (banner links to autosellgh.com)
+├── admin.html          # Legacy static admin dashboard
+├── styles.css          # Stylesheet for static pages
+├── script.js           # JavaScript for static pages
 └── README.md           # This file
 ```
 
@@ -47,9 +47,9 @@ npx http-server -p 8000
 ```
 
 ### 2. Access Your Website
-- **Homepage**: `http://localhost:8000`
-- **Sell Form**: `http://localhost:8000/sell-form.html`
-- **Admin Dashboard**: `http://localhost:8000/admin.html`
+- **Legacy static homepage**: `http://localhost:8000/index.html`
+- **Sell flow (production)**: [https://autosellgh.com/sell](https://autosellgh.com/sell); locally run `npm run dev` in `web/` and open **`http://localhost:3000/sell`**
+- **Legacy static admin**: `http://localhost:8000/admin.html`
 
 ## 🔧 Supabase Setup
 

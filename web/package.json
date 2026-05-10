@@ -1,0 +1,34 @@
+{
+  "name": "web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "legacy-sample-seed": "node --env-file=.env.local scripts/seed-legacy-sample-cars.mjs",
+    "legacy-sample-upload-photos": "node --env-file=.env.local scripts/upload-legacy-sample-photos.mjs",
+    "legacy-sample-migrate": "node --env-file=.env.local scripts/migrate-legacy-sample.mjs",
+    "seed-legacy-sample-cars": "npm run legacy-sample-seed"
+  },
+  "dependencies": {
+    "@supabase/ssr": "^0.10.2",
+    "@supabase/supabase-js": "^2.105.1",
+    "jose": "^6.2.3",
+    "lucide-react": "^1.14.0",
+    "next": "16.2.4",
+    "react": "19.2.4",
+    "react-dom": "19.2.4"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.4",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}
