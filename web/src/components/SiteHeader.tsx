@@ -1,7 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { BRAND_LOGO_SRC } from "@/lib/brand";
 import { waLink } from "@/lib/whatsapp";
 
 const navLinks = [
@@ -39,13 +41,17 @@ export function SiteHeader() {
       >
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 md:px-8">
           <Link href="/" className="group flex shrink-0 items-center gap-2.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#E8500A] transition-colors group-hover:bg-[#C8420A]">
-              <svg className="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24" aria-hidden>
-                <path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.85 7h10.29l1.08 3.11H5.77L6.85 7zM19 17H5v-5h14v5z" />
-                <circle cx="7.5" cy="14.5" r="1.5" />
-                <circle cx="16.5" cy="14.5" r="1.5" />
-              </svg>
-            </div>
+            <span className="flex h-9 shrink-0 items-center rounded-lg bg-white px-1.5 py-1 ring-1 ring-white/20 transition-opacity group-hover:opacity-95 md:h-10">
+              <Image
+                src={BRAND_LOGO_SRC}
+                alt="AutoSell Ghana"
+                width={160}
+                height={56}
+                sizes="(max-width:768px) 120px, 140px"
+                className="h-full w-auto max-h-full max-w-[118px] object-contain object-center md:max-w-[140px]"
+                priority
+              />
+            </span>
             <span className="font-display text-lg font-bold tracking-tight text-white">
               Auto<span className="text-[#E8500A]">Sell</span>
               <span className="ml-1 hidden text-sm font-normal text-[#9CA3AF] sm:inline">Ghana</span>

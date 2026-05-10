@@ -5,6 +5,7 @@ import { Analytics } from "@/components/Analytics";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { WhatsAppFloat } from "@/components/WhatsAppFloat";
+import { BRAND_LOGO_SRC } from "@/lib/brand";
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -28,6 +29,10 @@ export const metadata: Metadata = {
     "cars kumasi",
     "autosell ghana",
   ],
+  icons: {
+    icon: [{ url: BRAND_LOGO_SRC, type: "image/jpeg", sizes: "any" }],
+    apple: [{ url: BRAND_LOGO_SRC, type: "image/jpeg", sizes: "180x180" }],
+  },
   openGraph: {
     title: "AutoSell Ghana — Buy & sell cars",
     description: "Browse verified car listings from trusted sellers across Ghana.",
@@ -35,6 +40,7 @@ export const metadata: Metadata = {
     siteName: "AutoSell Ghana",
     locale: "en_GH",
     type: "website",
+    images: [{ url: BRAND_LOGO_SRC, alt: "AutoSell Ghana" }],
   },
   other: {
     "facebook-domain-verification": "cz740reg2yspdpdmlgj2rprh1ubl9f",
