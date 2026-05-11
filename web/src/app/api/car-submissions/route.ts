@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { buildCarSubmissionRow, formatSupabaseInsertError } from "@/lib/car-submission-insert";
 import type { CarSubmissionInsertInput } from "@/lib/car-submission-insert";
 import { createServiceSupabase } from "@/lib/supabase/service";
+import { notifyNewListing } from "@/lib/notify-email";
 
 export const runtime = "nodejs";
 
@@ -41,5 +42,11 @@ export async function POST(req: Request) {
   }
 
   const submissionId = data?.id;
+
+  void notifyNewListing({
+    ...(input as CarSubmissionInsertInput),
+    submissionId: submissionId ?? null,
+  });
+
   return NextResponse.json(submissionId != null ? { ok: true, submissionId } : { ok: true });
 }
