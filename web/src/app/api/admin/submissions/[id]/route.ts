@@ -1,14 +1,20 @@
 import { NextResponse } from "next/server";
 import { assertAdminCookie, AdminApiAuthError } from "@/lib/admin-api-auth";
 import { createServiceSupabase } from "@/lib/supabase/service";
+import {
+  buildCarSubmissionRow,
+  formatSupabaseInsertError,
+  isAdminListingStatus,
+} from "@/lib/car-submission-insert";
+import type { CarSubmissionInsertInput } from "@/lib/car-submission-insert";
 
 export const runtime = "nodejs";
 
-const ALLOWED_STATUS = new Set(["new", "contacted", "completed", "rejected", "archived"]);
-
-type PatchBody = {
+type PatchBody = Partial<CarSubmissionInsertInput> & {
   status?: string;
   notes?: string;
+  /** When true, treat body as full listing edit (validate all required fields). */
+  full?: boolean;
 };
 
 export async function PATCH(req: Request, ctx: { params: Promise<{ id: string }> }) {
@@ -34,13 +40,6 @@ export async function PATCH(req: Request, ctx: { params: Promise<{ id: string }>
     return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 });
   }
 
-  const status = typeof body.status === "string" ? body.status.trim() : "";
-  const notes = typeof body.notes === "string" ? body.notes : body.notes == null ? "" : String(body.notes);
-
-  if (!ALLOWED_STATUS.has(status)) {
-    return NextResponse.json({ error: "Invalid status." }, { status: 400 });
-  }
-
   const service = createServiceSupabase();
   if (!service) {
     return NextResponse.json(
@@ -52,17 +51,35 @@ export async function PATCH(req: Request, ctx: { params: Promise<{ id: string }>
     );
   }
 
-  const { error } = await service
-    .from("car_submissions")
-    .update({
-      status,
-      notes,
-      updated_at: new Date().toISOString(),
-    })
-    .eq("id", id);
+  const update: Record<string, unknown> = { updated_at: new Date().toISOString() };
+
+  if (body.full) {
+    const built = buildCarSubmissionRow(body as CarSubmissionInsertInput);
+    if (!built.ok) {
+      return NextResponse.json({ error: built.error }, { status: 400 });
+    }
+    Object.assign(update, built.row);
+    delete (update as { created_at?: unknown }).created_at;
+  }
+
+  const status = typeof body.status === "string" ? body.status.trim() : "";
+  if (status) {
+    if (!isAdminListingStatus(status)) {
+      return NextResponse.json({ error: "Invalid status." }, { status: 400 });
+    }
+    update.status = status;
+  } else if (!body.full) {
+    return NextResponse.json({ error: "Invalid status." }, { status: 400 });
+  }
+
+  if (typeof body.notes === "string") {
+    update.notes = body.notes;
+  }
+
+  const { error } = await service.from("car_submissions").update(update).eq("id", id);
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 422 });
+    return NextResponse.json({ error: formatSupabaseInsertError(error) }, { status: 422 });
   }
 
   return NextResponse.json({ ok: true });

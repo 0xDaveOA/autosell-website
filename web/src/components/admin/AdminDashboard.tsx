@@ -5,7 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import type { CarSubmission } from "@/types/car-submission";
 import { normalizePhotos } from "@/types/car-submission";
-import { LogOut, RefreshCw } from "lucide-react";
+import { LogOut, Plus, RefreshCw } from "lucide-react";
+import { AdminListingForm, type AdminListingFormMode } from "@/components/admin/AdminListingForm";
 
 export function AdminDashboard() {
   const [rows, setRows] = useState<CarSubmission[]>([]);
@@ -18,6 +19,7 @@ export function AdminDashboard() {
   const [modalNotes, setModalNotes] = useState("");
   const [saving, setSaving] = useState(false);
   const [hideRejected, setHideRejected] = useState(true);
+  const [formMode, setFormMode] = useState<AdminListingFormMode | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -125,6 +127,14 @@ export function AdminDashboard() {
             <Link href="/" className="text-sm text-neutral-600 hover:text-[var(--color-primary)]">
               View site
             </Link>
+            <button
+              type="button"
+              onClick={() => setFormMode({ kind: "create" })}
+              className="inline-flex items-center gap-1 rounded-lg bg-[var(--color-primary)] px-3 py-2 text-sm font-semibold text-white shadow-sm hover:brightness-95"
+            >
+              <Plus className="h-4 w-4" />
+              Add listing
+            </button>
             <button
               type="button"
               onClick={() => void load()}
@@ -274,13 +284,22 @@ export function AdminDashboard() {
                         </span>
                       </td>
                       <td className="px-3 py-3">
-                        <button
-                          type="button"
-                          onClick={() => openModal(r)}
-                          className="rounded-lg bg-[var(--color-secondary)] px-2 py-1 text-xs font-semibold text-white hover:bg-[#002438]"
-                        >
-                          Update
-                        </button>
+                        <div className="flex flex-col gap-1">
+                          <button
+                            type="button"
+                            onClick={() => openModal(r)}
+                            className="rounded-lg bg-[var(--color-secondary)] px-2 py-1 text-xs font-semibold text-white hover:bg-[#002438]"
+                          >
+                            Status
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setFormMode({ kind: "edit", row: r })}
+                            className="rounded-lg border border-[var(--color-border)] px-2 py-1 text-xs font-semibold text-[var(--color-secondary)] hover:bg-neutral-50"
+                          >
+                            Edit details
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   );
@@ -290,6 +309,17 @@ export function AdminDashboard() {
           )}
         </div>
       </div>
+
+      {formMode && (
+        <AdminListingForm
+          mode={formMode}
+          onClose={() => setFormMode(null)}
+          onSaved={() => {
+            setFormMode(null);
+            void load();
+          }}
+        />
+      )}
 
       {modalId != null && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">

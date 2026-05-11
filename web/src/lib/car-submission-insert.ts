@@ -1,3 +1,16 @@
+export const ADMIN_LISTING_STATUSES = [
+  "new",
+  "contacted",
+  "completed",
+  "rejected",
+  "archived",
+] as const;
+export type AdminListingStatus = (typeof ADMIN_LISTING_STATUSES)[number];
+
+export function isAdminListingStatus(s: unknown): s is AdminListingStatus {
+  return typeof s === "string" && (ADMIN_LISTING_STATUSES as readonly string[]).includes(s);
+}
+
 /** Public fields accepted from the sell form / API (no id, timestamps). */
 export type CarSubmissionInsertInput = {
   car_make: string;
