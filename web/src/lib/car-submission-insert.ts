@@ -1,3 +1,6 @@
+/** Max photos accepted from the public sell form (enforced in UI + POST /api/car-submissions). */
+export const SELL_FORM_MAX_PHOTOS = 6;
+
 export const ADMIN_LISTING_STATUSES = [
   "new",
   "contacted",

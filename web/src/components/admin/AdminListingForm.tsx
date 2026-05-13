@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { X, Upload, Plus, Trash2 } from "lucide-react";
+import { X, Upload, Plus, Trash2, GripVertical } from "lucide-react";
 import { createBrowserSupabase } from "@/lib/supabase/browser";
 import type { CarSubmission } from "@/types/car-submission";
 import { normalizePhotos } from "@/types/car-submission";
@@ -45,10 +45,12 @@ export function AdminListingForm({
   const initial = isEdit ? mode.row : null;
   const supabase = useMemo(() => createBrowserSupabase(), []);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const photoReorderFrom = useRef<number | null>(null);
 
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [uploadBusy, setUploadBusy] = useState(false);
+  const [fileDropActive, setFileDropActive] = useState(false);
 
   const [carMake, setCarMake] = useState(initial?.car_make ?? "");
   const [carModel, setCarModel] = useState(initial?.car_model ?? "");
@@ -114,8 +116,50 @@ export function AdminListingForm({
     }
   }
 
-  function removePhoto(url: string) {
-    setPhotos((prev) => prev.filter((u) => u !== url));
+  function removePhotoAt(index: number) {
+    setPhotos((prev) => prev.filter((_, i) => i !== index));
+  }
+
+  function reorderPhotos(from: number, to: number) {
+    if (from === to || from < 0 || to < 0) return;
+    setPhotos((prev) => {
+      if (from >= prev.length || to >= prev.length) return prev;
+      const next = [...prev];
+      const [item] = next.splice(from, 1);
+      next.splice(to, 0, item);
+      return next;
+    });
+  }
+
+  function isFileDrag(e: React.DragEvent) {
+    return Array.from(e.dataTransfer.types).includes("Files");
+  }
+
+  function onPhotoDropZoneDragEnter(e: React.DragEvent) {
+    if (!isFileDrag(e)) return;
+    setFileDropActive(true);
+  }
+
+  function onPhotoDropZoneDragLeave(e: React.DragEvent) {
+    if (!isFileDrag(e)) return;
+    const related = e.relatedTarget as Node | null;
+    if (related && (e.currentTarget as HTMLElement).contains(related)) return;
+    setFileDropActive(false);
+  }
+
+  function onPhotoDropZoneDragOver(e: React.DragEvent) {
+    if (isFileDrag(e)) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = "copy";
+    }
+  }
+
+  async function onPhotoDropZoneDrop(e: React.DragEvent) {
+    fileDragDepth.current = 0;
+    setFileDropActive(false);
+    if (!isFileDrag(e) || !e.dataTransfer.files?.length) return;
+    e.preventDefault();
+    await handleFiles(e.dataTransfer.files);
   }
 
   function addPhotoFromUrl() {
@@ -249,48 +293,107 @@ export function AdminListingForm({
           </Section>
 
           <Section title="Photos">
-            <div className="flex flex-wrap gap-3">
-              {photos.length === 0 && (
-                <p className="text-sm text-neutral-500">No photos yet. Upload or add a URL.</p>
-              )}
-              {photos.map((u) => (
-                <div
-                  key={u}
-                  className="group relative h-24 w-24 overflow-hidden rounded-lg border border-neutral-200"
-                >
-                  <Image src={u} alt="" fill className="object-cover" unoptimized />
-                  <button
-                    type="button"
-                    onClick={() => removePhoto(u)}
-                    className="absolute right-1 top-1 rounded-full bg-black/60 p-1 text-white opacity-0 transition-opacity group-hover:opacity-100"
-                    aria-label="Remove photo"
+            <p className="mb-3 text-xs leading-relaxed text-neutral-500">
+              <strong className="text-neutral-700">Drag thumbnails</strong> to change order — the first photo is the
+              main image on the site. <strong className="text-neutral-700">Drop image files</strong> anywhere in the
+              box below to upload (same as choosing files).
+            </p>
+            <div
+              className={`rounded-xl border-2 border-dashed p-3 transition-colors ${
+                fileDropActive
+                  ? "border-[var(--color-primary)] bg-[var(--color-primary)]/5"
+                  : "border-[var(--color-border)] bg-neutral-50/40"
+              }`}
+              onDragEnter={onPhotoDropZoneDragEnter}
+              onDragLeave={onPhotoDropZoneDragLeave}
+              onDragOver={onPhotoDropZoneDragOver}
+              onDrop={onPhotoDropZoneDrop}
+            >
+              <div className="flex flex-wrap gap-3">
+                {photos.length === 0 && (
+                  <p className="text-sm text-neutral-500">No photos yet. Upload, drop files here, or add a URL.</p>
+                )}
+                {photos.map((u, index) => (
+                  <div
+                    key={`${u}__${index}`}
+                    draggable
+                    onDragStart={(e) => {
+                      if (isFileDrag(e)) {
+                        e.preventDefault();
+                        return;
+                      }
+                      photoReorderFrom.current = index;
+                      e.dataTransfer.effectAllowed = "move";
+                      e.dataTransfer.setData("text/plain", "reorder");
+                    }}
+                    onDragEnd={() => {
+                      photoReorderFrom.current = null;
+                    }}
+                    onDragOver={(e) => {
+                      if (isFileDrag(e)) {
+                        e.preventDefault();
+                        e.dataTransfer.dropEffect = "copy";
+                        return;
+                      }
+                      e.preventDefault();
+                      e.dataTransfer.dropEffect = "move";
+                    }}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setFileDropActive(false);
+                      if (e.dataTransfer.files?.length) {
+                        void handleFiles(e.dataTransfer.files);
+                        return;
+                      }
+                      const from = photoReorderFrom.current;
+                      photoReorderFrom.current = null;
+                      if (from == null) return;
+                      reorderPhotos(from, index);
+                    }}
+                    className="group relative h-24 w-24 cursor-grab overflow-hidden rounded-lg border border-neutral-200 active:cursor-grabbing"
                   >
-                    <Trash2 className="h-3.5 w-3.5" />
-                  </button>
-                </div>
-              ))}
-            </div>
-            <div className="mt-3 flex flex-wrap gap-2">
-              <label className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-[var(--color-border)] bg-white px-3 py-2 text-xs font-semibold text-[var(--color-secondary)] hover:bg-neutral-50">
-                <Upload className="h-3.5 w-3.5" />
-                {uploadBusy ? "Uploading…" : "Upload from device"}
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
-                  multiple
-                  className="hidden"
-                  onChange={(e) => void handleFiles(e.target.files)}
-                />
-              </label>
-              <button
-                type="button"
-                onClick={addPhotoFromUrl}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--color-border)] bg-white px-3 py-2 text-xs font-semibold text-[var(--color-secondary)] hover:bg-neutral-50"
-              >
-                <Plus className="h-3.5 w-3.5" />
-                Add by URL
-              </button>
+                    <Image src={u} alt="" fill className="pointer-events-none object-cover" unoptimized />
+                    <div
+                      className="absolute bottom-0 left-0 right-0 flex items-center justify-center gap-0.5 bg-black/45 py-0.5 text-white"
+                      aria-hidden
+                    >
+                      <GripVertical className="h-3.5 w-3.5 opacity-90" />
+                      <span className="text-[10px] font-semibold tabular-nums">{index + 1}</span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => removePhotoAt(index)}
+                      className="absolute right-1 top-1 rounded-full bg-black/60 p-1 text-white opacity-100 shadow-sm md:opacity-0 md:transition-opacity md:group-hover:opacity-100"
+                      aria-label="Remove photo"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <label className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-[var(--color-border)] bg-white px-3 py-2 text-xs font-semibold text-[var(--color-secondary)] hover:bg-neutral-50">
+                  <Upload className="h-3.5 w-3.5" />
+                  {uploadBusy ? "Uploading…" : "Upload from device"}
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    className="hidden"
+                    onChange={(e) => void handleFiles(e.target.files)}
+                  />
+                </label>
+                <button
+                  type="button"
+                  onClick={addPhotoFromUrl}
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--color-border)] bg-white px-3 py-2 text-xs font-semibold text-[var(--color-secondary)] hover:bg-neutral-50"
+                >
+                  <Plus className="h-3.5 w-3.5" />
+                  Add by URL
+                </button>
+              </div>
             </div>
           </Section>
 

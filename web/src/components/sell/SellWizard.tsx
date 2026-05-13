@@ -3,9 +3,13 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { createBrowserSupabase } from "@/lib/supabase/browser";
-import { buildCarSubmissionRow, formatSupabaseInsertError } from "@/lib/car-submission-insert";
+import {
+  buildCarSubmissionRow,
+  formatSupabaseInsertError,
+  SELL_FORM_MAX_PHOTOS,
+} from "@/lib/car-submission-insert";
 import type { CarSubmissionInsertInput } from "@/lib/car-submission-insert";
-import { ChevronLeft, ChevronRight, Upload, Check } from "lucide-react";
+import { ChevronLeft, ChevronRight, Upload, Check, X } from "lucide-react";
 import { waLink } from "@/lib/whatsapp";
 
 import { TRANSMISSION_OPTIONS, FUEL_TYPE_OPTIONS } from "@/lib/listing-filters";
@@ -87,14 +91,37 @@ export function SellWizard({ initialPackage }: { initialPackage: string }) {
     setStep((s) => (s > 0 ? ((s - 1) as Step) : s));
   }
 
+  function handlePhotoInputChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setError(null);
+    const picked = Array.from(e.target.files ?? []);
+    e.target.value = "";
+    if (picked.length === 0) {
+      setFiles([]);
+      return;
+    }
+    if (picked.length > SELL_FORM_MAX_PHOTOS) {
+      setError(
+        `Please choose at most ${SELL_FORM_MAX_PHOTOS} photos (${picked.length} selected). Remove extras and try again.`
+      );
+      return;
+    }
+    setFiles(picked);
+  }
+
+  function removePhotoAt(index: number) {
+    setError(null);
+    setFiles((prev) => prev.filter((_, i) => i !== index));
+  }
+
   async function uploadPhotos(): Promise<{ urls: string[]; metadata: object[] }> {
     if (!supabase) throw new Error("Supabase is not configured");
     const urls: string[] = [];
     const metadata: object[] = [];
     const errors: string[] = [];
 
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
+    const toUpload = files.slice(0, SELL_FORM_MAX_PHOTOS);
+    for (let i = 0; i < toUpload.length; i++) {
+      const file = toUpload[i];
       if (!file.type.startsWith("image/")) {
         errors.push(`${file.name}: not an image file`);
         continue;
@@ -128,7 +155,7 @@ export function SellWizard({ initialPackage }: { initialPackage: string }) {
       }
     }
 
-    if (files.length > 0 && urls.length === 0 && errors.length > 0) {
+    if (toUpload.length > 0 && urls.length === 0 && errors.length > 0) {
       throw new Error(
         `Photo upload failed: ${errors[0]}${errors.length > 1 ? ` (+${errors.length - 1} more)` : ""}. Try smaller images or skip photos for now.`
       );
@@ -146,6 +173,10 @@ export function SellWizard({ initialPackage }: { initialPackage: string }) {
     }
     if (!agree) {
       setError("Please agree to the terms to continue.");
+      return;
+    }
+    if (files.length > SELL_FORM_MAX_PHOTOS) {
+      setError(`Please use at most ${SELL_FORM_MAX_PHOTOS} photos. Remove extras on the photos step.`);
       return;
     }
 
@@ -480,30 +511,66 @@ export function SellWizard({ initialPackage }: { initialPackage: string }) {
         )}
 
         {step === 1 && (
-          <div className="rounded-xl border border-[#E2E6EA] bg-white p-6 shadow-sm">
-            <label className="flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-[#E2E6EA] bg-[#F4F6F8] px-4 py-10 text-center transition-colors hover:border-[#E8500A]/40 hover:bg-[#FFF0EB]/50">
-              <Upload className="h-10 w-10 text-[#E8500A]" aria-hidden />
-              <span className="font-display mt-2 text-sm font-semibold text-[#1A1F2E]">
-                Click to add photos
-              </span>
-              <span className="mt-1 text-xs text-[#6B7280]">JPG / PNG, optional — multiple files OK</span>
-              <input
-                type="file"
-                accept="image/*"
-                multiple
-                className="sr-only"
-                onChange={(e) => setFiles(Array.from(e.target.files ?? []))}
-              />
-            </label>
-            {files.length > 0 && (
-              <ul className="mt-4 grid grid-cols-2 gap-2 text-xs text-[#4B5563] sm:grid-cols-3">
-                {files.map((f) => (
-                  <li key={f.name + f.size} className="truncate rounded-lg border border-[#E2E6EA] bg-[#F4F6F8] px-2 py-1.5">
-                    {f.name}
-                  </li>
-                ))}
-              </ul>
-            )}
+          <div className="space-y-4">
+            <div className="rounded-xl border border-[#E8500A]/20 bg-gradient-to-br from-[#FFF8F3] to-[#F4F9FC] px-4 py-3 text-sm text-[#374151] shadow-sm">
+              <p className="font-display font-semibold text-[#1A1F2E]">
+                Photo checklist (max {SELL_FORM_MAX_PHOTOS})
+              </p>
+              <p className="mt-1.5 text-xs leading-relaxed text-[#6B7280]">
+                Upload up to six images for an organised listing:{" "}
+                <strong className="text-[#4B5563]">front</strong>,{" "}
+                <strong className="text-[#4B5563]">driver side</strong>,{" "}
+                <strong className="text-[#4B5563]">passenger side</strong>,{" "}
+                <strong className="text-[#4B5563]">two interior</strong> (e.g. dashboard and seats), and{" "}
+                <strong className="text-[#4B5563]">rear</strong>. Add them in that order if you can — the{" "}
+                <strong className="text-[#4B5563]">first</strong> photo becomes the main image on the site.
+              </p>
+            </div>
+            <div className="rounded-xl border border-[#E2E6EA] bg-white p-6 shadow-sm">
+              <label className="flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-[#E2E6EA] bg-[#F4F6F8] px-4 py-10 text-center transition-colors hover:border-[#E8500A]/40 hover:bg-[#FFF0EB]/50">
+                <Upload className="h-10 w-10 text-[#E8500A]" aria-hidden />
+                <span className="font-display mt-2 text-sm font-semibold text-[#1A1F2E]">
+                  Click to choose photos
+                </span>
+                <span className="mt-1 text-xs text-[#6B7280]">
+                  JPG / PNG — optional, up to {SELL_FORM_MAX_PHOTOS} files (select multiple at once)
+                </span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  className="sr-only"
+                  onChange={handlePhotoInputChange}
+                />
+              </label>
+              {files.length > 0 && (
+                <div className="mt-4">
+                  <p className="mb-2 text-xs font-medium text-[#6B7280]">
+                    Selected: {files.length} / {SELL_FORM_MAX_PHOTOS}
+                  </p>
+                  <ul className="grid grid-cols-1 gap-2 text-xs text-[#4B5563] sm:grid-cols-2">
+                    {files.map((f, idx) => (
+                      <li
+                        key={`${f.name}-${idx}-${f.size}`}
+                        className="flex items-center gap-2 rounded-lg border border-[#E2E6EA] bg-[#F4F6F8] px-2 py-1.5"
+                      >
+                        <span className="min-w-0 flex-1 truncate" title={f.name}>
+                          {idx + 1}. {f.name}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => removePhotoAt(idx)}
+                          className="shrink-0 rounded-md p-1 text-[#6B7280] hover:bg-[#E5E7EB] hover:text-[#1A1F2E]"
+                          aria-label={`Remove ${f.name}`}
+                        >
+                          <X className="h-4 w-4" aria-hidden />
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
           </div>
         )}
 

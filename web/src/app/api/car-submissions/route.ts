@@ -1,5 +1,9 @@
 import { NextResponse } from "next/server";
-import { buildCarSubmissionRow, formatSupabaseInsertError } from "@/lib/car-submission-insert";
+import {
+  buildCarSubmissionRow,
+  formatSupabaseInsertError,
+  SELL_FORM_MAX_PHOTOS,
+} from "@/lib/car-submission-insert";
 import type { CarSubmissionInsertInput } from "@/lib/car-submission-insert";
 import { createServiceSupabase } from "@/lib/supabase/service";
 import { notifyNewListing } from "@/lib/notify-email";
@@ -19,6 +23,19 @@ export async function POST(req: Request) {
   }
 
   const input = body as Partial<CarSubmissionInsertInput>;
+  if (Array.isArray(input.photos) && input.photos.length > SELL_FORM_MAX_PHOTOS) {
+    return NextResponse.json(
+      { error: `At most ${SELL_FORM_MAX_PHOTOS} photos are allowed per listing.` },
+      { status: 400 }
+    );
+  }
+  if (Array.isArray(input.photo_metadata) && input.photo_metadata.length > SELL_FORM_MAX_PHOTOS) {
+    return NextResponse.json(
+      { error: `At most ${SELL_FORM_MAX_PHOTOS} photos are allowed per listing.` },
+      { status: 400 }
+    );
+  }
+
   const built = buildCarSubmissionRow(input as CarSubmissionInsertInput);
   if (!built.ok) {
     return NextResponse.json({ error: built.error }, { status: 400 });
