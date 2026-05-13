@@ -139,7 +139,7 @@ export default async function CarsPage({ searchParams }: { searchParams: Promise
         </h1>
         <p className="mt-2 max-w-2xl text-neutral-600">
           Filter by make, price, location, year, transmission, and fuel type. Cards show a photo gallery; open details
-          or WhatsApp the seller.
+          or message AutoSell on WhatsApp to enquire.
         </p>
       </div>
 

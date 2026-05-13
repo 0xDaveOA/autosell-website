@@ -6,7 +6,6 @@ import { fetchPublishedListingById } from "@/lib/listings";
 import { normalizePhotos, parseListingYear } from "@/types/car-submission";
 import { CarGallery } from "@/components/CarGallery";
 import { listingEnquiryWaLink } from "@/lib/whatsapp";
-import { sellerTelHref } from "@/lib/phone";
 import { getSiteUrl } from "@/lib/site-url";
 
 export const dynamic = "force-dynamic";
@@ -68,8 +67,6 @@ export default async function CarDetailPage({ params }: Props) {
     location: car.location,
     siteUrl: getSiteUrl(),
   });
-
-  const telHref = sellerTelHref(car.seller_phone);
 
   const specs = [
     { icon: "📅", label: "Year", value: yearLabel },
@@ -148,22 +145,6 @@ export default async function CarDetailPage({ params }: Props) {
             <p className="mt-3 text-center text-xs text-[#9CA3AF]">
               Message AutoSell on WhatsApp — we&apos;ll help you with this listing and connect you with the seller.
             </p>
-
-            {telHref && (
-              <a
-                href={telHref}
-                className="font-display mt-3 flex w-full items-center justify-center gap-2 rounded-lg border border-[#E2E6EA] bg-white py-3 text-sm font-semibold text-[#1A1F2E] hover:bg-[#F4F6F8]"
-              >
-                Call seller · {car.seller_phone}
-              </a>
-            )}
-
-            <div className="mt-6 rounded-xl border border-[#F4F6F8] bg-[#F4F6F8]/80 px-4 py-3 text-sm text-[#4B5563]">
-              <div className="font-display font-semibold text-[#1A1F2E]">Seller</div>
-              <div className="mt-1 font-medium">{car.seller_name}</div>
-              <div>{car.seller_phone}</div>
-              {car.seller_email && <div className="mt-1 text-xs">{car.seller_email}</div>}
-            </div>
 
             <Link
               href="/cars"
