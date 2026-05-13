@@ -155,7 +155,6 @@ export function AdminListingForm({
   }
 
   async function onPhotoDropZoneDrop(e: React.DragEvent) {
-    fileDragDepth.current = 0;
     setFileDropActive(false);
     if (!isFileDrag(e) || !e.dataTransfer.files?.length) return;
     e.preventDefault();
