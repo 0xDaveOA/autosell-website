@@ -17,8 +17,6 @@ export default function HomePage() {
     <>
       <HomeHero />
 
-      <HomeWhyUs />
-
       <Suspense
         fallback={
           <section className="bg-[#F4F6F8] px-5 py-16 md:px-8">
@@ -34,6 +32,8 @@ export default function HomePage() {
       >
         <HomeFeatured />
       </Suspense>
+
+      <HomeWhyUs />
 
       <HomeSellBanner />
       <HomePricing />
