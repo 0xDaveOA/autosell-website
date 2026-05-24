@@ -24,6 +24,10 @@ export type CarSubmission = {
   notes?: string | null;
   paystack_reference?: string | null;
   paystack_payment_status?: string | null;
+  meta_social_posted_at?: string | null;
+  meta_fb_post_id?: string | null;
+  meta_ig_media_id?: string | null;
+  meta_social_last_error?: string | null;
   created_at: string;
   updated_at?: string | null;
 };

@@ -7,6 +7,7 @@ import {
   isAdminListingStatus,
 } from "@/lib/car-submission-insert";
 import type { CarSubmissionInsertInput } from "@/lib/car-submission-insert";
+import { scheduleMetaAutoPostIfNeeded } from "@/lib/meta-social-auto-post";
 
 export const runtime = "nodejs";
 
@@ -76,11 +77,24 @@ export async function PATCH(req: Request, ctx: { params: Promise<{ id: string }>
     update.notes = body.notes;
   }
 
+  const { data: prevRow } = await service
+    .from("car_submissions")
+    .select("status")
+    .eq("id", id)
+    .maybeSingle();
+
   const { error } = await service.from("car_submissions").update(update).eq("id", id);
 
   if (error) {
     return NextResponse.json({ error: formatSupabaseInsertError(error) }, { status: 422 });
   }
+
+  const newStatus =
+    typeof update.status === "string" ? update.status : String(prevRow?.status ?? "");
+  scheduleMetaAutoPostIfNeeded(service, id, {
+    previousStatus: prevRow?.status ?? null,
+    newStatus,
+  });
 
   return NextResponse.json({ ok: true });
 }

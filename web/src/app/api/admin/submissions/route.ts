@@ -7,6 +7,7 @@ import {
   isAdminListingStatus,
 } from "@/lib/car-submission-insert";
 import type { CarSubmissionInsertInput } from "@/lib/car-submission-insert";
+import { scheduleMetaAutoPostIfNeeded } from "@/lib/meta-social-auto-post";
 
 export const runtime = "nodejs";
 
@@ -98,5 +99,14 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: formatSupabaseInsertError(error) }, { status: 422 });
   }
 
-  return NextResponse.json({ ok: true, submissionId: data?.id ?? null });
+  const submissionId = data?.id;
+  if (submissionId != null) {
+    const newStatus = String(built.row.status ?? "new");
+    scheduleMetaAutoPostIfNeeded(service, submissionId, {
+      previousStatus: null,
+      newStatus,
+    });
+  }
+
+  return NextResponse.json({ ok: true, submissionId: submissionId ?? null });
 }
