@@ -13,6 +13,7 @@ import { ChevronLeft, ChevronRight, Upload, Check, X } from "lucide-react";
 import { waLink } from "@/lib/whatsapp";
 
 import { TRANSMISSION_OPTIONS, FUEL_TYPE_OPTIONS } from "@/lib/listing-filters";
+import { getPublicPaystackAmounts, isPaystackEnabled } from "@/lib/paystack-public";
 
 function buildYearOptions(): string[] {
   const y = new Date().getFullYear();
@@ -33,6 +34,8 @@ const selectClass =
 type Step = 0 | 1 | 2 | 3;
 
 export function SellWizard({ initialPackage }: { initialPackage: string }) {
+  const paystackEnabled = isPaystackEnabled();
+  const payAmounts = getPublicPaystackAmounts();
   const supabase = useMemo(() => createBrowserSupabase(), []);
   const [step, setStep] = useState<Step>(0);
   const [submitting, setSubmitting] = useState(false);
@@ -180,7 +183,6 @@ export function SellWizard({ initialPackage }: { initialPackage: string }) {
       return;
     }
 
-    const paystackEnabled = process.env.NEXT_PUBLIC_PAYSTACK_ENABLED === "true";
     const paidPkg = packageType === "premium" || packageType === "complete";
     if (paystackEnabled && paidPkg) {
       const em = sellerEmail.trim();
@@ -633,11 +635,15 @@ export function SellWizard({ initialPackage }: { initialPackage: string }) {
               >
                 <option value="">Select package</option>
                 <option value="free">FREE Basic Listing — ₵0 (7 days)</option>
-                <option value="premium">Premium services — ₵50</option>
-                <option value="complete">Complete package — ₵200</option>
+                <option value="premium">
+                  Premium services — ₵{payAmounts.premium.toLocaleString("en-GH")}
+                </option>
+                <option value="complete">
+                  Complete package — ₵{payAmounts.complete.toLocaleString("en-GH")}
+                </option>
               </select>
             </div>
-            {process.env.NEXT_PUBLIC_PAYSTACK_ENABLED === "true" && (
+            {paystackEnabled && (
               <p className="text-xs leading-relaxed text-[#6B7280]">
                 Premium / Complete online payment is active: use a real email on <strong>Your details</strong> — after
                 submit we’ll send you to Paystack to pay (amounts configured on the server).
