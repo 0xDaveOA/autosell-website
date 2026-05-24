@@ -52,14 +52,16 @@ export function buildListingSocialCaption(car: CarSubmission): string {
   const loc = car.location.trim();
 
   return [
-    "🚗 New listing on AutoSell Ghana",
+    "🚗 New Arrival on AutoSell Ghana 🔥🔥",
     "",
     `${title}${year ? ` · ${year}` : ""}`,
-    `${price}${loc ? ` · ${loc}` : ""}`,
+    `Price: ${price}${loc ? ` · ${loc}` : ""}`,
+    "",
+    "DM Us to buy this car NOW. First come, first serve.",
     "",
     `View & enquire: ${url}`,
     "",
-    "Message us on WhatsApp for any car you want — we'll help you find it.",
+    "Message us on WhatsApp for any car you want, we'll help you find it.",
     "",
     "#AutoSellGhana #CarsForSaleGhana #UsedCarsGhana",
   ].join("\n");
