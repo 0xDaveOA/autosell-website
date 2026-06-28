@@ -1,3 +1,4 @@
+import { after } from "next/server";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { CarSubmission } from "@/types/car-submission";
 import { getListingStatuses } from "@/lib/listings";
@@ -24,7 +25,8 @@ export function scheduleMetaAutoPostIfNeeded(
   const nowPublished = isPublishedStatus(opts.newStatus);
   if (!nowPublished || wasPublished) return;
 
-  void runMetaAutoPost(service, listingId);
+  // Must use after() on Vercel — bare void promises are killed when the route returns.
+  after(() => runMetaAutoPost(service, listingId));
 }
 
 async function runMetaAutoPost(service: SupabaseClient, listingId: number): Promise<void> {

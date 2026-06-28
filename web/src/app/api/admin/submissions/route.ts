@@ -10,6 +10,7 @@ import type { CarSubmissionInsertInput } from "@/lib/car-submission-insert";
 import { scheduleMetaAutoPostIfNeeded } from "@/lib/meta-social-auto-post";
 
 export const runtime = "nodejs";
+export const maxDuration = 60;
 
 export async function GET() {
   try {

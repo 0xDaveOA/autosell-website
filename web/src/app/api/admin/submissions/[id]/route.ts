@@ -10,6 +10,8 @@ import type { CarSubmissionInsertInput } from "@/lib/car-submission-insert";
 import { scheduleMetaAutoPostIfNeeded } from "@/lib/meta-social-auto-post";
 
 export const runtime = "nodejs";
+/** Meta Graph (FB + IG) can take several seconds after admin save. */
+export const maxDuration = 60;
 
 type PatchBody = Partial<CarSubmissionInsertInput> & {
   status?: string;
