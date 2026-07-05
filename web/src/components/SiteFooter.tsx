@@ -40,6 +40,9 @@ export function SiteFooter() {
               {[
                 ["Home", "/"],
                 ["Browse Cars", "/cars"],
+                ["Browse Rentals", "/rentals"],
+                ["Find Flights", "/flights"],
+                ["Find Hotels", "/hotels"],
                 ["Sell Your Car", "/sell"],
                 ["Pricing", "/#pricing"],
                 ["Partner With Us", "/#partner"],
@@ -70,6 +73,7 @@ export function SiteFooter() {
               {[
                 ["Car Advertising", "/sell"],
                 ["Garage Partnerships", "/#partner"],
+                ["Rent With Us (partners)", "/rent-with-us"],
                 ["Browse Listings", "/cars"],
                 ["Contact Support", "/#contact"],
               ].map(([label, href]) => (

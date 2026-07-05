@@ -124,6 +124,9 @@ export function AdminDashboard() {
             <p className="text-xs text-neutral-500">Car submissions</p>
           </div>
           <div className="flex items-center gap-2">
+            <Link href="/admin/rentals" className="text-sm text-neutral-600 hover:text-[var(--color-primary)]">
+              Rentals
+            </Link>
             <Link href="/" className="text-sm text-neutral-600 hover:text-[var(--color-primary)]">
               View site
             </Link>

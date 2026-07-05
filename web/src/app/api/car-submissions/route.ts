@@ -6,6 +6,7 @@ import {
 } from "@/lib/car-submission-insert";
 import type { CarSubmissionInsertInput } from "@/lib/car-submission-insert";
 import { createServiceSupabase } from "@/lib/supabase/service";
+import { createClient } from "@/lib/supabase/server";
 import { notifyNewListing } from "@/lib/notify-email";
 
 export const runtime = "nodejs";
@@ -53,7 +54,16 @@ export async function POST(req: Request) {
     );
   }
 
-  const { data, error } = await service.from("car_submissions").insert([built.row]).select("id").maybeSingle();
+  // Attach user_id if a Supabase session exists in cookies
+  let userId: string | null = null;
+  try {
+    const userClient = await createClient();
+    const { data: { user } } = await userClient.auth.getUser();
+    userId = user?.id ?? null;
+  } catch { /* no session — anonymous submission is fine */ }
+
+  const row = userId ? { ...built.row, user_id: userId } : built.row;
+  const { data, error } = await service.from("car_submissions").insert([row]).select("id").maybeSingle();
   if (error) {
     return NextResponse.json({ error: formatSupabaseInsertError(error) }, { status: 422 });
   }

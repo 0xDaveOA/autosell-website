@@ -3,19 +3,26 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { BRAND_LOGO_SRC } from "@/lib/brand";
 import { waLink } from "@/lib/whatsapp";
+import { createBrowserSupabase } from "@/lib/supabase/browser";
+import type { User } from "@supabase/supabase-js";
 
 const navLinks = [
   { label: "Buy a car", href: "/cars" },
+  { label: "Rent a car", href: "/rentals" },
+  { label: "Flights", href: "/flights" },
+  { label: "Hotels", href: "/hotels" },
   { label: "Sell my car", href: "/sell" },
   { label: "Partner with us", href: "/#partner" },
-  { label: "About", href: "/#about" },
 ];
 
 export function SiteHeader() {
+  const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 10);
@@ -29,6 +36,33 @@ export function SiteHeader() {
       document.body.style.overflow = "";
     };
   }, [menuOpen]);
+
+  useEffect(() => {
+    const supabase = createBrowserSupabase();
+    if (!supabase) return;
+    supabase.auth.getUser().then(({ data }) => setUser(data.user));
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
+  async function handleSignOut() {
+    const supabase = createBrowserSupabase();
+    if (supabase) await supabase.auth.signOut();
+    setUser(null);
+    router.push("/");
+    router.refresh();
+  }
+
+  const initials = user
+    ? ((user.user_metadata?.full_name ?? user.email ?? user.phone ?? "U") as string)
+        .split(" ")
+        .map((w: string) => w[0])
+        .join("")
+        .slice(0, 2)
+        .toUpperCase()
+    : "";
 
   return (
     <>
@@ -82,6 +116,30 @@ export function SiteHeader() {
               </svg>
               WhatsApp
             </a>
+            {user ? (
+              <div className="flex items-center gap-2">
+                <Link
+                  href="/dashboard"
+                  className="flex items-center gap-2 rounded-lg border border-white/20 px-3 py-2 text-sm font-medium text-[#D1D5DB] transition-all hover:border-white/40 hover:text-white"
+                >
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#E8500A] text-[10px] font-bold text-white">
+                    {initials}
+                  </span>
+                  Dashboard
+                </Link>
+                <button
+                  type="button"
+                  onClick={handleSignOut}
+                  className="rounded-lg px-3 py-2 text-sm font-medium text-[#9CA3AF] transition-colors hover:text-white"
+                >
+                  Sign out
+                </button>
+              </div>
+            ) : (
+              <Link href="/login" className="rounded-lg border border-white/20 px-4 py-2 text-sm font-medium text-[#D1D5DB] transition-all hover:border-white/40 hover:text-white">
+                Sign in
+              </Link>
+            )}
             <Link href="/sell" className="btn-primary rounded-lg px-5 py-2 text-sm">
               List a Car
             </Link>
@@ -135,6 +193,32 @@ export function SiteHeader() {
           >
             List a Car
           </Link>
+          {user ? (
+            <>
+              <Link
+                href="/dashboard"
+                onClick={() => setMenuOpen(false)}
+                className="flex items-center justify-center rounded-xl border border-white/30 px-5 py-3 text-sm font-semibold text-white"
+              >
+                Dashboard
+              </Link>
+              <button
+                type="button"
+                onClick={() => { setMenuOpen(false); handleSignOut(); }}
+                className="rounded-xl border border-white/20 px-5 py-3 text-sm font-semibold text-[#9CA3AF]"
+              >
+                Sign out
+              </button>
+            </>
+          ) : (
+            <Link
+              href="/login"
+              onClick={() => setMenuOpen(false)}
+              className="flex items-center justify-center rounded-xl border border-white/30 px-5 py-3 text-sm font-semibold text-white"
+            >
+              Sign in
+            </Link>
+          )}
         </div>
       </div>
     </>

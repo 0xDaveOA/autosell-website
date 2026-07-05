@@ -346,3 +346,36 @@ export function MarketingSeoDealersBody() {
     </>
   );
 }
+
+export function MarketingSeoRentalPartnersBody() {
+  return (
+    <>
+      <p>
+        Do you run a car rental business in Ghana? AutoSell.gh now helps rental partners reach renters actively
+        searching online — for cars, with or without a driver, by the day.
+      </p>
+      <h2>Why list your rental fleet with AutoSell</h2>
+      <ul>
+        <li>Each vehicle gets its own listing page with photos and a direct WhatsApp enquiry button</li>
+        <li>Renters contact you directly — no commission taken on bookings</li>
+        <li>Free to list while we grow the rentals marketplace</li>
+        <li>Manage your fleet status independently — pause or remove vehicles any time</li>
+      </ul>
+      <h2>How it works</h2>
+      <ol>
+        <li>Submit your business info and fleet through our guided signup form</li>
+        <li>Our team reviews your submission and approves your business</li>
+        <li>Your vehicles go live on AutoSell.gh for renters to browse</li>
+      </ol>
+      <p>This is completely free for now — no subscription required to get started.</p>
+      <SeoCtaRow>
+        <Link href="/rent-with-us" className="btn-primary font-display rounded-lg px-5 py-3 text-sm font-semibold">
+          List your rental fleet
+        </Link>
+        <Link href="/rentals" className="btn-outline font-display rounded-lg px-5 py-3 text-sm font-semibold">
+          See current rentals
+        </Link>
+      </SeoCtaRow>
+    </>
+  );
+}

@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { HomeHero } from "@/components/home/HomeHero";
+import { HomeVerticals } from "@/components/home/HomeVerticals";
 import { HomeFeatured } from "@/components/home/HomeFeatured";
 import {
   HomeWhyUs,
@@ -16,6 +17,8 @@ export default function HomePage() {
   return (
     <>
       <HomeHero />
+
+      <HomeVerticals />
 
       <Suspense
         fallback={

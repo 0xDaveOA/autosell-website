@@ -6,4 +6,5 @@ export const SEO_GUIDE_NAV = [
   { href: "/buy-toyota-ghana", label: "Toyota in Ghana" },
   { href: "/free-car-valuation-ghana", label: "Free car valuation" },
   { href: "/car-dealers-ghana", label: "Dealers & garages" },
+  { href: "/car-rental-ghana", label: "Rent your fleet" },
 ] as const;
