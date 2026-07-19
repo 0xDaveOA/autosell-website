@@ -26,6 +26,10 @@ export type RentalListing = {
   photo_metadata: unknown[] | null;
   featured?: boolean;
   paystack_reference?: string | null;
+  meta_social_posted_at?: string | null;
+  meta_fb_post_id?: string | null;
+  meta_ig_media_id?: string | null;
+  meta_social_last_error?: string | null;
   created_at: string;
   updated_at?: string | null;
 };

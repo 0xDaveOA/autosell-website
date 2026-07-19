@@ -2,7 +2,11 @@
 
 When you set a listing to a **live** status (default: `completed`, from `NEXT_PUBLIC_LISTING_STATUSES`), the site can automatically post once to your **Facebook Page** and **Instagram** (if linked).
 
+**Rentals too:** rental vehicles auto-post when they become **active** (and their partner is approved). Approving a partner auto-posts up to 3 of their already-active vehicles; the rest can be posted from the admin dashboard's Social column.
+
 Posts are **not** repeated if you edit the listing again — only the first time it goes live.
+
+After setup, walk through [meta-auto-post-verification.md](meta-auto-post-verification.md) to confirm everything works end to end.
 
 ---
 
@@ -10,7 +14,8 @@ Posts are **not** repeated if you edit the listing again — only the first time
 
 Run once in **SQL Editor**:
 
-`web/scripts/supabase-meta-social-columns.sql`
+- `web/scripts/supabase-meta-social-columns.sql` (cars)
+- `web/scripts/supabase-rental-meta-columns.sql` (rentals)
 
 ---
 

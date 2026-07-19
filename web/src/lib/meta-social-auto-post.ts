@@ -29,7 +29,17 @@ export function scheduleMetaAutoPostIfNeeded(
   after(() => runMetaAutoPost(service, listingId));
 }
 
-async function runMetaAutoPost(service: SupabaseClient, listingId: number): Promise<void> {
+export type MetaPostRunResult = {
+  ok: boolean;
+  alreadyPosted?: boolean;
+  fbPostId?: string;
+  error?: string;
+};
+
+export async function runMetaAutoPost(
+  service: SupabaseClient,
+  listingId: number
+): Promise<MetaPostRunResult> {
   const { data: row, error: loadErr } = await service
     .from("car_submissions")
     .select("*")
@@ -38,14 +48,14 @@ async function runMetaAutoPost(service: SupabaseClient, listingId: number): Prom
 
   if (loadErr || !row) {
     console.error("meta auto-post load", loadErr?.message ?? "not found");
-    return;
+    return { ok: false, error: loadErr?.message ?? "Listing not found." };
   }
 
   const car = row as CarSubmission & {
     meta_social_posted_at?: string | null;
   };
 
-  if (car.meta_social_posted_at) return;
+  if (car.meta_social_posted_at) return { ok: true, alreadyPosted: true };
 
   const result = await postListingToMetaSocial(car);
 
@@ -66,4 +76,6 @@ async function runMetaAutoPost(service: SupabaseClient, listingId: number): Prom
 
   const { error: upErr } = await service.from("car_submissions").update(patch).eq("id", listingId);
   if (upErr) console.error("meta auto-post update", upErr.message);
+
+  return { ok: result.ok, fbPostId: result.fbPostId, error: result.error };
 }

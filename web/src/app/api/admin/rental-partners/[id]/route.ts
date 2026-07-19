@@ -7,8 +7,11 @@ import {
   isAdminPartnerStatus,
 } from "@/lib/rental-partner-insert";
 import type { RentalPartnerInsertInput } from "@/lib/rental-partner-insert";
+import { schedulePartnerApprovalMetaPosts } from "@/lib/meta-social-rental-auto-post";
 
 export const runtime = "nodejs";
+/** Meta Graph (FB + IG) can take several seconds after admin save. */
+export const maxDuration = 60;
 
 type PatchBody = Partial<RentalPartnerInsertInput> & {
   status?: string;
@@ -72,10 +75,24 @@ export async function PATCH(req: Request, ctx: { params: Promise<{ id: string }>
     update.notes = body.notes;
   }
 
+  const { data: prevRow } = await service
+    .from("rental_partners")
+    .select("status")
+    .eq("id", id)
+    .maybeSingle();
+
   const { error } = await service.from("rental_partners").update(update).eq("id", id);
   if (error) {
     return NextResponse.json({ error: formatSupabaseInsertError(error) }, { status: 422 });
   }
+
+  // Approving a partner makes their active vehicles publicly visible — auto-post up to 3
+  const newStatus =
+    typeof update.status === "string" ? update.status : String(prevRow?.status ?? "");
+  schedulePartnerApprovalMetaPosts(service, id, {
+    previousStatus: prevRow?.status ?? null,
+    newStatus,
+  });
 
   return NextResponse.json({ ok: true });
 }

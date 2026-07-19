@@ -7,8 +7,11 @@ import {
   isAdminRentalListingStatus,
 } from "@/lib/rental-partner-insert";
 import type { RentalVehicleInsertInput } from "@/lib/rental-partner-insert";
+import { scheduleRentalMetaAutoPostIfNeeded } from "@/lib/meta-social-rental-auto-post";
 
 export const runtime = "nodejs";
+/** Meta Graph (FB + IG) can take several seconds after admin save. */
+export const maxDuration = 60;
 
 type PatchBody = Partial<RentalVehicleInsertInput> & {
   partner_id?: number;
@@ -50,13 +53,14 @@ export async function PATCH(req: Request, ctx: { params: Promise<{ id: string }>
 
   const update: Record<string, unknown> = { updated_at: new Date().toISOString() };
 
+  const { data: prevRow } = await service
+    .from("rental_listings")
+    .select("partner_id, status")
+    .eq("id", id)
+    .maybeSingle();
+
   if (body.full) {
-    const { data: existing } = await service
-      .from("rental_listings")
-      .select("partner_id")
-      .eq("id", id)
-      .maybeSingle();
-    const partnerId = Number(body.partner_id ?? existing?.partner_id);
+    const partnerId = Number(body.partner_id ?? prevRow?.partner_id);
     if (!Number.isFinite(partnerId) || partnerId < 1) {
       return NextResponse.json({ error: "A valid partner_id is required." }, { status: 400 });
     }
@@ -82,13 +86,17 @@ export async function PATCH(req: Request, ctx: { params: Promise<{ id: string }>
     update.notes = body.notes;
   }
 
-  // No Meta auto-post hook for rentals in this pass — see scheduleMetaAutoPostIfNeeded
-  // in meta-social-auto-post.ts for the pattern a future pass could wire in here.
-
   const { error } = await service.from("rental_listings").update(update).eq("id", id);
   if (error) {
     return NextResponse.json({ error: formatSupabaseInsertError(error) }, { status: 422 });
   }
+
+  const newStatus =
+    typeof update.status === "string" ? update.status : String(prevRow?.status ?? "");
+  scheduleRentalMetaAutoPostIfNeeded(service, id, {
+    previousStatus: prevRow?.status ?? null,
+    newStatus,
+  });
 
   return NextResponse.json({ ok: true });
 }

@@ -7,10 +7,11 @@ import { LogOut, RefreshCw } from "lucide-react";
 import type { RentalPartner } from "@/types/rental-partner";
 import type { RentalListingWithPartner } from "@/types/rental-listing";
 import { normalizePhotos } from "@/types/rental-listing";
+import { MetaPostBadge } from "@/components/admin/MetaPostBadge";
 
 type Tab = "partners" | "listings";
 
-export function AdminRentalsDashboard() {
+export function AdminRentalsDashboard({ metaConfigured = false }: { metaConfigured?: boolean }) {
   const [tab, setTab] = useState<Tab>("partners");
   const [partners, setPartners] = useState<RentalPartner[]>([]);
   const [listings, setListings] = useState<RentalListingWithPartner[]>([]);
@@ -26,6 +27,7 @@ export function AdminRentalsDashboard() {
   const [listingModalNotes, setListingModalNotes] = useState("");
 
   const [saving, setSaving] = useState(false);
+  const [repostingId, setRepostingId] = useState<number | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -76,6 +78,23 @@ export function AdminRentalsDashboard() {
   useEffect(() => {
     void load();
   }, [load]);
+
+  async function repost(id: number) {
+    setRepostingId(id);
+    try {
+      const res = await fetch(`/api/admin/rental-listings/${id}/repost`, {
+        method: "POST",
+        credentials: "same-origin",
+      });
+      const payload = (await res.json().catch(() => ({}))) as { error?: string };
+      if (!res.ok) {
+        alert(payload.error || `Post failed (${res.status})`);
+      }
+    } finally {
+      setRepostingId(null);
+      void load();
+    }
+  }
 
   function partnerName(id: number): string {
     return partners.find((p) => p.id === id)?.business_name ?? `Partner #${id}`;
@@ -156,6 +175,9 @@ export function AdminRentalsDashboard() {
             <p className="text-xs text-neutral-500">
               Approving a partner does not auto-activate their vehicles — manage each vehicle&apos;s status
               independently.
+              {metaConfigured
+                ? " Approving a partner auto-posts up to 3 of their already-active vehicles to Facebook/Instagram."
+                : ""}
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -290,6 +312,7 @@ export function AdminRentalsDashboard() {
                   <th className="px-3 py-3">Daily rate</th>
                   <th className="px-3 py-3">Photos</th>
                   <th className="px-3 py-3">Status</th>
+                  {metaConfigured && <th className="px-3 py-3">Social</th>}
                   <th className="px-3 py-3">Actions</th>
                 </tr>
               </thead>
@@ -339,6 +362,22 @@ export function AdminRentalsDashboard() {
                           {l.status}
                         </span>
                       </td>
+                      {metaConfigured && (
+                        <td className="whitespace-nowrap px-3 py-3">
+                          <MetaPostBadge
+                            postedAt={l.meta_social_posted_at}
+                            fbPostId={l.meta_fb_post_id}
+                            lastError={l.meta_social_last_error}
+                            metaConfigured={metaConfigured}
+                            posting={repostingId === l.id}
+                            onPost={
+                              l.status === "active" && l.rental_partners?.status === "approved"
+                                ? () => void repost(l.id)
+                                : undefined
+                            }
+                          />
+                        </td>
+                      )}
                       <td className="px-3 py-3">
                         <button
                           type="button"

@@ -1,4 +1,5 @@
 import { AdminDashboard } from "@/components/admin/AdminDashboard";
+import { isMetaAutoPostConfigured } from "@/lib/meta-social-config";
 
 export const metadata = {
   title: "Admin",
@@ -6,5 +7,5 @@ export const metadata = {
 };
 
 export default function AdminPage() {
-  return <AdminDashboard />;
+  return <AdminDashboard metaConfigured={isMetaAutoPostConfigured()} />;
 }

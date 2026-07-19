@@ -7,8 +7,11 @@ import {
   isAdminRentalListingStatus,
 } from "@/lib/rental-partner-insert";
 import type { RentalVehicleInsertInput } from "@/lib/rental-partner-insert";
+import { scheduleRentalMetaAutoPostIfNeeded } from "@/lib/meta-social-rental-auto-post";
 
 export const runtime = "nodejs";
+/** Meta Graph (FB + IG) can take several seconds after admin save. */
+export const maxDuration = 60;
 
 export async function GET() {
   try {
@@ -97,6 +100,13 @@ export async function POST(req: Request) {
   const { data, error } = await service.from("rental_listings").insert([built.row]).select("id").maybeSingle();
   if (error) {
     return NextResponse.json({ error: formatSupabaseInsertError(error) }, { status: 422 });
+  }
+
+  if (data?.id != null) {
+    scheduleRentalMetaAutoPostIfNeeded(service, data.id as number, {
+      previousStatus: null,
+      newStatus: String(built.row.status ?? "pending"),
+    });
   }
 
   return NextResponse.json({ ok: true, listingId: data?.id ?? null });

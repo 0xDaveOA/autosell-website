@@ -7,8 +7,9 @@ import type { CarSubmission } from "@/types/car-submission";
 import { normalizePhotos } from "@/types/car-submission";
 import { LogOut, Plus, RefreshCw } from "lucide-react";
 import { AdminListingForm, type AdminListingFormMode } from "@/components/admin/AdminListingForm";
+import { MetaPostBadge } from "@/components/admin/MetaPostBadge";
 
-export function AdminDashboard() {
+export function AdminDashboard({ metaConfigured = false }: { metaConfigured?: boolean }) {
   const [rows, setRows] = useState<CarSubmission[]>([]);
   const [loading, setLoading] = useState(true);
   const [configError, setConfigError] = useState<string | null>(null);
@@ -20,6 +21,7 @@ export function AdminDashboard() {
   const [saving, setSaving] = useState(false);
   const [hideRejected, setHideRejected] = useState(true);
   const [formMode, setFormMode] = useState<AdminListingFormMode | null>(null);
+  const [repostingId, setRepostingId] = useState<number | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -83,6 +85,23 @@ export function AdminDashboard() {
     setModalId(r.id);
     setModalStatus(r.status);
     setModalNotes(r.notes ?? "");
+  }
+
+  async function repost(id: number) {
+    setRepostingId(id);
+    try {
+      const res = await fetch(`/api/admin/submissions/${id}/repost`, {
+        method: "POST",
+        credentials: "same-origin",
+      });
+      const payload = (await res.json().catch(() => ({}))) as { error?: string };
+      if (!res.ok) {
+        alert(payload.error || `Post failed (${res.status})`);
+      }
+    } finally {
+      setRepostingId(null);
+      void load();
+    }
   }
 
   async function saveModal() {
@@ -238,6 +257,7 @@ export function AdminDashboard() {
                   <th className="px-3 py-3">Photos</th>
                   <th className="px-3 py-3">Payment</th>
                   <th className="px-3 py-3">Status</th>
+                  {metaConfigured && <th className="px-3 py-3">Social</th>}
                   <th className="px-3 py-3">Actions</th>
                 </tr>
               </thead>
@@ -286,6 +306,18 @@ export function AdminDashboard() {
                           {r.status}
                         </span>
                       </td>
+                      {metaConfigured && (
+                        <td className="whitespace-nowrap px-3 py-3">
+                          <MetaPostBadge
+                            postedAt={r.meta_social_posted_at}
+                            fbPostId={r.meta_fb_post_id}
+                            lastError={r.meta_social_last_error}
+                            metaConfigured={metaConfigured}
+                            posting={repostingId === r.id}
+                            onPost={r.status === "completed" ? () => void repost(r.id) : undefined}
+                          />
+                        </td>
+                      )}
                       <td className="px-3 py-3">
                         <div className="flex flex-col gap-1">
                           <button

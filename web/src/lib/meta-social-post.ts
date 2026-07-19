@@ -123,12 +123,11 @@ async function postToInstagram(opts: {
   return { ok: true, mediaId };
 }
 
-/** Post one listing to Facebook Page and (if configured) Instagram. */
-export async function postListingToMetaSocial(car: CarSubmission): Promise<MetaPostResult> {
-  const photos = normalizePhotos(car.photos);
-  const imageUrl = photos[0];
-  const link = `${getSiteUrl()}/cars/${car.id}`;
-  const caption = buildListingSocialCaption(car);
+export type MetaPostContent = { caption: string; link: string; imageUrl?: string };
+
+/** Shared low-level poster: FB Page first, then IG if imageUrl + IG user id are present. */
+export async function postContentToMetaSocial(content: MetaPostContent): Promise<MetaPostResult> {
+  const { caption, link, imageUrl } = content;
 
   const fb = await postToFacebookPage({ caption, link, imageUrl });
   if (!fb.ok) {
@@ -149,4 +148,13 @@ export async function postListingToMetaSocial(car: CarSubmission): Promise<MetaP
   }
 
   return { ok: true, fbPostId: fb.postId, igMediaId };
+}
+
+/** Post one listing to Facebook Page and (if configured) Instagram. */
+export async function postListingToMetaSocial(car: CarSubmission): Promise<MetaPostResult> {
+  const photos = normalizePhotos(car.photos);
+  const imageUrl = photos[0];
+  const link = `${getSiteUrl()}/cars/${car.id}`;
+  const caption = buildListingSocialCaption(car);
+  return postContentToMetaSocial({ caption, link, imageUrl });
 }
