@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { createBrowserSupabase } from "@/lib/supabase/browser";
 
 type Tab = "google" | "email";
@@ -10,7 +10,6 @@ const inputClass =
   "w-full rounded-lg border border-[#D1D5DB] bg-white px-4 py-3 text-sm text-[#1A1F2E] placeholder-[#9CA3AF] outline-none focus:border-[#E8500A] focus:ring-2 focus:ring-[#E8500A]/20 transition-all";
 
 export function AuthForm() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("redirect") ?? "/dashboard";
   const [tab, setTab] = useState<Tab>("google");

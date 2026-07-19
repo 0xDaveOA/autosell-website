@@ -2,6 +2,8 @@ import { Suspense } from "react";
 import { HomeHero } from "@/components/home/HomeHero";
 import { HomeVerticals } from "@/components/home/HomeVerticals";
 import { HomeFeatured } from "@/components/home/HomeFeatured";
+import { HomeRentalsShowcase } from "@/components/home/HomeRentalsShowcase";
+import { HomeTravelBanner } from "@/components/home/HomeTravelBanner";
 import {
   HomeWhyUs,
   HomeSellBanner,
@@ -35,6 +37,24 @@ export default function HomePage() {
       >
         <HomeFeatured />
       </Suspense>
+
+      <Suspense
+        fallback={
+          <section className="bg-white px-5 py-16 md:px-8">
+            <div className="mx-auto max-w-7xl">
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                {[0, 1, 2, 3].map((i) => (
+                  <div key={i} className="h-[320px] animate-pulse rounded-2xl bg-[#F4F6F8]" />
+                ))}
+              </div>
+            </div>
+          </section>
+        }
+      >
+        <HomeRentalsShowcase />
+      </Suspense>
+
+      <HomeTravelBanner />
 
       <HomeWhyUs />
 

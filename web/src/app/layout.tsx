@@ -5,6 +5,7 @@ import { Analytics } from "@/components/Analytics";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { WhatsAppFloat } from "@/components/WhatsAppFloat";
+import { AssistantWidget } from "@/components/assistant/AssistantWidget";
 import { BRAND_LOGO_SRC } from "@/lib/brand";
 
 const plusJakarta = Plus_Jakarta_Sans({
@@ -68,6 +69,7 @@ export default function RootLayout({
         <main className="flex-1">{children}</main>
         <SiteFooter />
         <WhatsAppFloat />
+        <AssistantWidget />
       </body>
     </html>
   );

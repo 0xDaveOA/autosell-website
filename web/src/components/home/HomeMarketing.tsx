@@ -3,8 +3,8 @@ import Link from "next/link";
 import { Check, X } from "lucide-react";
 import { waLink } from "@/lib/whatsapp";
 
-/** Matches autosell_pricing_page_rewrite.html */
-const PX = "#D85A30";
+/** Brand orange — matches --orange in globals.css */
+const PX = "#E8500A";
 
 const features = [
   {

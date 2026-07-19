@@ -1,6 +1,6 @@
 /** Best-effort Ghana/local phone → WhatsApp `wa.me` number (digits only, no leading +). Returns null if unparseable. */
 export function phoneToWaE164(raw: string): string | null {
-  let d = raw.replace(/\D/g, "");
+  const d = raw.replace(/\D/g, "");
   if (!d) return null;
   // Already has country code
   if (d.startsWith("233")) {
