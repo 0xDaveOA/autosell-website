@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { after } from "next/server";
 import { assertAdminCookie, AdminApiAuthError } from "@/lib/admin-api-auth";
 import { createServiceSupabase } from "@/lib/supabase/service";
 import {
@@ -8,6 +9,7 @@ import {
 } from "@/lib/car-submission-insert";
 import type { CarSubmissionInsertInput } from "@/lib/car-submission-insert";
 import { scheduleMetaAutoPostIfNeeded } from "@/lib/meta-social-auto-post";
+import { notifySellerStatusChange } from "@/lib/notify-seller-email";
 
 export const runtime = "nodejs";
 /** Meta Graph (FB + IG) can take several seconds after admin save. */
@@ -81,7 +83,7 @@ export async function PATCH(req: Request, ctx: { params: Promise<{ id: string }>
 
   const { data: prevRow } = await service
     .from("car_submissions")
-    .select("status")
+    .select("status, seller_email, seller_name, car_make, car_model, price")
     .eq("id", id)
     .maybeSingle();
 
@@ -97,6 +99,20 @@ export async function PATCH(req: Request, ctx: { params: Promise<{ id: string }>
     previousStatus: prevRow?.status ?? null,
     newStatus,
   });
+
+  // Email the seller when their listing is published or rejected (only on an actual change)
+  if (prevRow && newStatus !== prevRow.status) {
+    after(() =>
+      notifySellerStatusChange({
+        submissionId: id,
+        sellerEmail: prevRow.seller_email,
+        sellerName: prevRow.seller_name,
+        title: `${prevRow.car_make ?? ""} ${prevRow.car_model ?? ""}`.trim() || "car",
+        price: prevRow.price,
+        newStatus,
+      })
+    );
+  }
 
   return NextResponse.json({ ok: true });
 }
